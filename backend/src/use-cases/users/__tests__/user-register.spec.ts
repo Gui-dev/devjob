@@ -20,4 +20,20 @@ describe('User Register Use Case', () => {
 
     expect(id).toBeDefined()
   })
+
+  it('should not be able to create a user with the same email', async () => {
+    await userRegister.execute({
+      name: 'Bruce Wayne',
+      email: 'bruce@email.com',
+      password: '123456',
+    })
+
+    await expect(
+      userRegister.execute({
+        name: 'Bruce Wayne',
+        email: 'bruce@email.com',
+        password: '123456',
+      }),
+    ).rejects.toThrowError('User already exists')
+  })
 })
