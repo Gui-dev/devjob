@@ -9,12 +9,13 @@ import jwt from '@fastify/jwt'
 import swagger from '@fastify/swagger'
 import swaggerUI from '@fastify/swagger-ui'
 import { userRegisterRoute } from './http/controllers/users/user-register'
+import { userLoginRoute } from './http/controllers/users/user-login'
 
 export const app = Fastify().withTypeProvider<ZodTypeProvider>()
 
 app.register(cors)
 app.register(jwt, {
-  secret: 'secret',
+  secret: String(process.env.JWT_SECRET),
 })
 
 app.setValidatorCompiler(validatorCompiler)
@@ -31,3 +32,4 @@ app.register(swagger, {
 app.register(swaggerUI)
 
 app.register(userRegisterRoute)
+app.register(userLoginRoute)
