@@ -8,7 +8,7 @@ import {
 import { UserRegisterUseCase } from '../../../use-cases/users/user-register'
 import { UserRepository } from '../../../repositories/user-repository'
 
-export const userRegisterRoute = (app: FastifyInstance) => {
+export const userRegisterRoute = async (app: FastifyInstance) => {
   app.withTypeProvider<ZodTypeProvider>().post(
     '/users/register',
     {

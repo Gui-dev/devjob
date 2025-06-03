@@ -7,9 +7,9 @@ import {
 import { UserRepository } from '../../../repositories/user-repository'
 import { UserLoginUseCase } from '../../../use-cases/users/user-login'
 
-export const userLoginRoute = (app: FastifyInstance) => {
+export const userLoginRoute = async (app: FastifyInstance) => {
   app.withTypeProvider<ZodTypeProvider>().post(
-    'users/login',
+    '/users/login',
     {
       schema: {
         summary: 'Logar usuário',
