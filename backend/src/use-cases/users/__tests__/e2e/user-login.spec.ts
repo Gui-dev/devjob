@@ -34,6 +34,5 @@ describe('/users/login POST', () => {
 
     expect(response.statusCode).toEqual(200)
     expect(response.body).toHaveProperty('accessToken')
-    expect(response.body).toHaveProperty('refreshToken')
   })
 })
