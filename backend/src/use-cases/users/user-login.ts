@@ -1,5 +1,4 @@
 import { compare } from 'bcrypt'
-import { sign } from 'jsonwebtoken'
 
 import type { IUserRepositoryContract } from '../../contracts/user-repository-contract'
 import { createAccessToken, createRefreshToken } from '../../lib/jwt'

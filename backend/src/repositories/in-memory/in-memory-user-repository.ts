@@ -21,6 +21,11 @@ export class InMemoryUserRepository implements IUserRepositoryContract {
     return user
   }
 
+   public async findById(userId: string): Promise<User | null> {
+    const user = this.users.find(user => user.id === userId) ?? null
+    return user
+  }
+
   public async findByEmail(email: string): Promise<User | null> {
     const user = this.users.find(user => user.email === email) ?? null
     return user

@@ -31,7 +31,15 @@ export const userLoginRoute = async (app: FastifyInstance) => {
         password,
       })
 
-      return reply.status(200).send({ accessToken, refreshToken })
+      return reply
+        .setCookie('refreshToken', refreshToken, {
+          path: '/',
+          httpOnly: true,
+          secure: true,
+          sameSite: true,
+        })
+        .status(200)
+        .send({ accessToken })
     },
   )
 }
