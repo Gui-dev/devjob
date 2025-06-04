@@ -21,6 +21,16 @@ export class UserRepository implements IUserRepositoryContract {
     return user
   }
 
+  public async findById(userId: string): Promise<User | null> {
+    const user = await prisma.user.findUnique({
+      where: {
+        id: userId,
+      },
+    })
+
+    return user
+  }
+
   public async findByEmail(email: string): Promise<User | null> {
     const user = await prisma.user.findUnique({
       where: {
