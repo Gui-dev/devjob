@@ -1,0 +1,5 @@
+-- CreateEnum
+CREATE TYPE "Role" AS ENUM ('CANDIDATE', 'RECRUITER');
+
+-- AlterTable
+ALTER TABLE "users" ADD COLUMN     "role" "Role" NOT NULL DEFAULT 'CANDIDATE';
