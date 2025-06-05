@@ -9,12 +9,14 @@ export class UserRepository implements IUserRepositoryContract {
     name,
     email,
     password,
+    role,
   }: ICreateUserDTO): Promise<User> {
     const user = await prisma.user.create({
       data: {
         name,
         email,
         password,
+        role,
       },
     })
 
