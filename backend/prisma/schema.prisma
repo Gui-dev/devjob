@@ -13,6 +13,12 @@ enum Role {
   RECRUITER
 }
 
+enum JobType {
+  REMOTE
+  ONSITE
+  HYBRID
+}
+
 model User {
   id        String   @id @default(cuid())
   name      String
@@ -20,6 +26,23 @@ model User {
   password  String
   role      Role     @default(CANDIDATE)
   createdAt DateTime @default(now()) @map("created_at")
+  Job       Job[]
 
   @@map("users")
+}
+
+model Job {
+  id           String   @id @default(cuid())
+  recruiterId  String   @map("recruiter_id")
+  title        String
+  description  String
+  company      String
+  location     String
+  type         JobType
+  technologies String[]
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  recruiter User @relation(fields: [recruiterId], references: [id])
+
+  @@map("jobs")
 }
