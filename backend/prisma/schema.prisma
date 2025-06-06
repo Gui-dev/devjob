@@ -19,6 +19,12 @@ enum JobType {
   HYBRID
 }
 
+enum JobLevel {
+  JUNIOR
+  PLENO
+  SENIOR
+}
+
 model User {
   id        String   @id @default(cuid())
   name      String
@@ -39,6 +45,7 @@ model Job {
   company      String
   location     String
   type         JobType
+  level        JobLevel
   technologies String[]
   createdAt    DateTime @default(now()) @map("created_at")
 
