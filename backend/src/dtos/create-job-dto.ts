@@ -1,4 +1,4 @@
-import type { JobType } from '../../prisma/generated/prisma'
+import type { JobLevel, JobType } from '../../prisma/generated/prisma'
 
 export interface ICreateJobDTO {
   recruiterId: string
@@ -7,5 +7,6 @@ export interface ICreateJobDTO {
   company: string
   location: string
   type: JobType
+  level: JobLevel
   technologies: string[]
 }

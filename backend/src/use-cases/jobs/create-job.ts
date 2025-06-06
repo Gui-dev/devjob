@@ -1,5 +1,5 @@
 import type { IJobRepositoryContract } from '@/contracts/job-repository-contract'
-import type { JobType } from '../../../prisma/generated/prisma'
+import type { JobLevel, JobType } from '../../../prisma/generated/prisma'
 
 interface ICreateJobProps {
   recruiterId: string
@@ -8,6 +8,7 @@ interface ICreateJobProps {
   company: string
   location: string
   type: JobType
+  level: JobLevel
   technologies: string[]
 }
 

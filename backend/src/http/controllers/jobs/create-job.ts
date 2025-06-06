@@ -25,8 +25,15 @@ export const createJobRoute = async (app: FastifyInstance) => {
       },
     },
     async (request, reply) => {
-      const { title, description, company, location, type, technologies } =
-        request.body
+      const {
+        title,
+        description,
+        company,
+        location,
+        type,
+        level,
+        technologies,
+      } = request.body
 
       const jobRepository = new JobRepository()
       const createJobUseCase = new CreateJobUseCase(jobRepository)
@@ -38,6 +45,7 @@ export const createJobRoute = async (app: FastifyInstance) => {
         company,
         location,
         type,
+        level,
         technologies,
       })
 
