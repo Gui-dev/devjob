@@ -2,7 +2,7 @@ import type { Job } from '../../prisma/generated/prisma'
 
 import type { IJobRepositoryContract } from '@/contracts/job-repository-contract'
 import type { ICreateJobDTO } from '@/dtos/create-job-dto'
-import type { IFindManyWithFiltersDTO } from '@/dtos/find-many-with-filters-dto'
+import type { IFindManyJobsWithFiltersDTO } from '@/dtos/find-many-jobs-with-filters-dto'
 
 import { prisma } from '@/lib/prisma'
 
@@ -16,7 +16,7 @@ export class JobRepository implements IJobRepositoryContract {
   }
 
   public async findManyWithFilters(
-    filters: IFindManyWithFiltersDTO,
+    filters: IFindManyJobsWithFiltersDTO,
   ): Promise<Job[]> {
     const jobs = await prisma.job.findMany({
       where: {

@@ -2,7 +2,7 @@ import type { IJobRepositoryContract } from '@/contracts/job-repository-contract
 import type { Job } from '../../../prisma/generated/prisma'
 import type { ICreateJobDTO } from '@/dtos/create-job-dto'
 import { randomUUID } from 'node:crypto'
-import type { IFindManyWithFiltersDTO } from '@/dtos/find-many-with-filters-dto'
+import type { IFindManyJobsWithFiltersDTO } from '@/dtos/find-many-jobs-with-filters-dto'
 
 export class InMemoryJobRepository implements IJobRepositoryContract {
   private items: Job[] = []
@@ -19,7 +19,7 @@ export class InMemoryJobRepository implements IJobRepositoryContract {
   }
 
   public async findManyWithFilters(
-    filters: IFindManyWithFiltersDTO,
+    filters: IFindManyJobsWithFiltersDTO,
   ): Promise<Job[]> {
     return this.items.filter(job => {
       if (
