@@ -46,4 +46,11 @@ describe('List Jobs With Filters', () => {
     expect(jobs).toHaveLength(1)
     expect(jobs[0].title).toEqual('Backend')
   })
+
+  it('should be able to list jobs filtered by type', async () => {
+    const { jobs } = await sut.execute({ type: 'REMOTE' })
+
+    expect(jobs).toHaveLength(1)
+    expect(jobs[0].title).toEqual('Frontend')
+  })
 })
