@@ -80,4 +80,14 @@ describe('List JObs Flow E2E', () => {
     expect(response.body.jobs).toHaveLength(1)
     expect(response.body.jobs[0].title).toEqual('Frontend')
   })
+
+  it('should be able to list jobs filtered by location', async () => {
+    const response = await request(app.server).get('/jobs').query({
+      location: 'São Paulo',
+    })
+
+    expect(response.statusCode).toEqual(200)
+    expect(response.body.jobs).toHaveLength(1)
+    expect(response.body.jobs[0].title).toEqual('Backend')
+  })
 })
