@@ -53,4 +53,11 @@ describe('List Jobs With Filters', () => {
     expect(jobs).toHaveLength(1)
     expect(jobs[0].title).toEqual('Frontend')
   })
+
+  it('should be able to list jobs filtered by location', async () => {
+    const { jobs } = await sut.execute({ location: 'São Paulo' })
+
+    expect(jobs).toHaveLength(1)
+    expect(jobs[0].title).toEqual('Backend')
+  })
 })
