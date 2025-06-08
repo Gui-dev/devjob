@@ -1,14 +1,14 @@
 import { InMemoryJobRepository } from '@/repositories/in-memory/in-memory-job-repository'
 import { beforeEach, describe, expect, it } from 'vitest'
-import { ListJobsWithFilters } from '../list-jobs-with-filter'
+import { ListJobsWithFiltersUseCase } from '../list-jobs-with-filter'
 
 let jobRepository: InMemoryJobRepository
-let sut: ListJobsWithFilters
+let sut: ListJobsWithFiltersUseCase
 
 describe('List Jobs With Filters', () => {
   beforeEach(async () => {
     jobRepository = new InMemoryJobRepository()
-    sut = new ListJobsWithFilters(jobRepository)
+    sut = new ListJobsWithFiltersUseCase(jobRepository)
 
     await jobRepository.create({
       recruiterId: 'recruiter-1',

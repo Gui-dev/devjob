@@ -8,7 +8,7 @@ interface IListJobsFiltersProps {
   location?: string
 }
 
-export class ListJobsWithFilters {
+export class ListJobsWithFiltersUseCase {
   constructor(private jobsRepository: IJobRepositoryContract) {}
 
   public async execute({

@@ -18,6 +18,7 @@ export const listJobsSchemaResponse = z.object({
       type: z.enum(['REMOTE', 'ONSITE', 'HYBRID']),
       level: z.enum(['JUNIOR', 'PLENO', 'SENIOR']),
       technologies: z.array(z.string()),
+      createdAt: z.date(),
     }),
   ),
 })
