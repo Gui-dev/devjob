@@ -17,7 +17,7 @@ describe('List Jobs With Filters', () => {
       company: 'XYZ',
       location: 'São Paulo',
       type: 'ONSITE',
-      level: 'PLENO',
+      level: 'JUNIOR',
       technologies: ['Node.js'],
     })
 
@@ -26,7 +26,7 @@ describe('List Jobs With Filters', () => {
       title: 'Frontend',
       description: 'Vaga React para a empresa XYZ',
       company: 'XYZ',
-      location: 'São Paulo',
+      location: 'Rio de Janeiro',
       type: 'REMOTE',
       level: 'PLENO',
       technologies: ['React'],
@@ -35,6 +35,13 @@ describe('List Jobs With Filters', () => {
 
   it('should be able to list jobs filtered by technology', async () => {
     const { jobs } = await sut.execute({ technology: 'Node.js' })
+
+    expect(jobs).toHaveLength(1)
+    expect(jobs[0].title).toEqual('Backend')
+  })
+
+  it('should be able to list jobs filtered by level', async () => {
+    const { jobs } = await sut.execute({ level: 'JUNIOR' })
 
     expect(jobs).toHaveLength(1)
     expect(jobs[0].title).toEqual('Backend')
