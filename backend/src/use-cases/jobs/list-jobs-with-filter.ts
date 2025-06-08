@@ -24,7 +24,7 @@ export class ListJobsWithFiltersUseCase {
       location,
     })
 
-    if (!jobs || jobs.length === 0) {
+    if (!jobs) {
       throw new Error('Jobs not found')
     }
 
