@@ -16,6 +16,7 @@ describe('User Register Use Case', () => {
       name: 'Bruce Wayne',
       email: 'bruce@email.com',
       password: '123456',
+      role: 'CANDIDATE',
     })
 
     expect(id).toBeDefined()
@@ -26,6 +27,7 @@ describe('User Register Use Case', () => {
       name: 'Bruce Wayne',
       email: 'bruce@email.com',
       password: '123456',
+      role: 'CANDIDATE',
     })
 
     await expect(
@@ -33,6 +35,7 @@ describe('User Register Use Case', () => {
         name: 'Bruce Wayne',
         email: 'bruce@email.com',
         password: '123456',
+        role: 'CANDIDATE',
       }),
     ).rejects.toThrowError('User already exists')
   })

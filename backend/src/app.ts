@@ -1,5 +1,6 @@
 import Fastify from 'fastify'
 import {
+  hasZodFastifySchemaValidationErrors,
   serializerCompiler,
   validatorCompiler,
   type ZodTypeProvider,
@@ -19,6 +20,8 @@ import { listJobsRoute } from './http/controllers/jobs/list-jobs'
 import { getJobDetailsRoute } from './http/controllers/jobs/get-job-details'
 import { env } from './lib/env'
 import { createJobApplicationRoute } from './http/controllers/job-applications/create-job-application'
+import { JobApplicationError } from './http/errors/job-application-error'
+import { ZodError } from 'zod/v4'
 
 export const app = Fastify().withTypeProvider<ZodTypeProvider>()
 
@@ -70,3 +73,28 @@ app.register(createJobRoute)
 app.register(listJobsRoute)
 app.register(getJobDetailsRoute)
 app.register(createJobApplicationRoute)
+
+app.setErrorHandler((error, _, reply) => {
+  if (hasZodFastifySchemaValidationErrors(error)) {
+    return reply.status(400).send({
+      error: 'Validation Error',
+      message: 'Request does not match schema',
+      details: error.validation,
+    })
+  }
+
+  if (error.code === 'FST_JWT_NO_AUTHORIZATION_IN_HEADER') {
+    return reply.status(401).send({ message: 'Token not provided.' })
+  }
+
+  if (error.code === 'FST_JWT_AUTHORIZATION_TOKEN_INVALID') {
+    return reply.status(401).send({ message: 'Invalid token.' })
+  }
+
+  if (error instanceof JobApplicationError) {
+    return reply.status(error.statusCode).send({ message: error.message })
+  }
+
+  console.log('APP_ERROR: ', error)
+  return reply.status(500).send({ message: 'Internal server error.' })
+})

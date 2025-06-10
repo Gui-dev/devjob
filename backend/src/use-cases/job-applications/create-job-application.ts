@@ -1,4 +1,5 @@
 import type { IJobApplicationRepositoryContract } from '@/contracts/job-application-repository-contract'
+import { JobApplicationError } from '@/http/errors/job-application-error'
 
 interface ICreateJobApplicationRequest {
   jobId: string
@@ -24,7 +25,10 @@ export class CreateJobApplicationUseCase {
       await this.jobApplicationRepository.findByJobIdAndUserId(jobId, userId)
 
     if (jobApplicationExists) {
-      throw new Error('You have already applied for this job')
+      throw new JobApplicationError(
+        'You have already applied for this job',
+        409,
+      )
     }
 
     const jobApplication = await this.jobApplicationRepository.create({
