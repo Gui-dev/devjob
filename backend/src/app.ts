@@ -14,9 +14,10 @@ import { userRegisterRoute } from './http/controllers/users/user-register'
 import { userLoginRoute } from './http/controllers/users/user-login'
 import { refreshTokenRoute } from './http/controllers/sessions/refresh-token'
 import { userProfileRoute } from './http/controllers/users/me'
-import { env } from './lib/env'
 import { createJobRoute } from './http/controllers/jobs/create-job'
 import { listJobsRoute } from './http/controllers/jobs/list-jobs'
+import { getJobDetailsRoute } from './http/controllers/jobs/get-job-details'
+import { env } from './lib/env'
 
 export const app = Fastify().withTypeProvider<ZodTypeProvider>()
 
@@ -66,3 +67,4 @@ app.register(refreshTokenRoute)
 app.register(userProfileRoute)
 app.register(createJobRoute)
 app.register(listJobsRoute)
+app.register(getJobDetailsRoute)
