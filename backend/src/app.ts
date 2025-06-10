@@ -21,7 +21,7 @@ import { getJobDetailsRoute } from './http/controllers/jobs/get-job-details'
 import { env } from './lib/env'
 import { createJobApplicationRoute } from './http/controllers/job-applications/create-job-application'
 import { JobApplicationError } from './http/errors/job-application-error'
-import { ZodError } from 'zod/v4'
+import { getUserApplicationsRoute } from './http/controllers/job-applications/get-user-applications'
 
 export const app = Fastify().withTypeProvider<ZodTypeProvider>()
 
@@ -73,6 +73,7 @@ app.register(createJobRoute)
 app.register(listJobsRoute)
 app.register(getJobDetailsRoute)
 app.register(createJobApplicationRoute)
+app.register(getUserApplicationsRoute)
 
 app.setErrorHandler((error, _, reply) => {
   if (hasZodFastifySchemaValidationErrors(error)) {
