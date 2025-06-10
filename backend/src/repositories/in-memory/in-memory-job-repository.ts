@@ -18,6 +18,11 @@ export class InMemoryJobRepository implements IJobRepositoryContract {
     return job
   }
 
+  public async findById(jobId: string): Promise<Job | null> {
+    const job = this.items.find(job => job.id === jobId) ?? null
+    return job
+  }
+
   public async findManyWithFilters(
     filters: IFindManyJobsWithFiltersDTO,
   ): Promise<Job[]> {

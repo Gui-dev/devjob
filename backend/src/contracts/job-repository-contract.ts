@@ -4,5 +4,6 @@ import type { IFindManyJobsWithFiltersDTO } from '@/dtos/find-many-jobs-with-fil
 
 export interface IJobRepositoryContract {
   create(job: ICreateJobDTO): Promise<Job>
+  findById(jobId: string): Promise<Job | null>
   findManyWithFilters(filters: IFindManyJobsWithFiltersDTO): Promise<Job[]>
 }

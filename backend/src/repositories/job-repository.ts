@@ -15,6 +15,16 @@ export class JobRepository implements IJobRepositoryContract {
     return job
   }
 
+  public async findById(jobId: string): Promise<Job | null> {
+    const job = await prisma.job.findUnique({
+      where: {
+        id: jobId,
+      },
+    })
+
+    return job
+  }
+
   public async findManyWithFilters(
     filters: IFindManyJobsWithFiltersDTO,
   ): Promise<Job[]> {
