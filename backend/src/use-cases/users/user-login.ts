@@ -24,9 +24,9 @@ export class UserLoginUseCase {
       throw new Error('Invalid credentials')
     }
 
-    const accessToken = createAccessToken(user.id)
+    const accessToken = createAccessToken(user.id, user.role)
 
-    const refreshToken = createRefreshToken(user.id)
+    const refreshToken = createRefreshToken(user.id, user.role)
 
     return {
       accessToken,
