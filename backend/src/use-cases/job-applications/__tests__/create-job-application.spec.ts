@@ -24,4 +24,24 @@ describe('Create job application use case', () => {
     expect(jobApplicationId).toEqual(expect.any(String))
     expect(jobApplicationRepository.get()).toHaveLength(1)
   })
+
+  it('should not be able to allow a candidate to apply for a job twice', async () => {
+    await sut.execute({
+      jobId: 'job-01',
+      userId: 'user-01',
+      message: 'Olá, tenho interesse',
+      githubUrl: 'https://github.com/dracarys',
+      linkedinUrl: 'https://linkedin.com/dracarys',
+    })
+
+    await expect(() =>
+      sut.execute({
+        jobId: 'job-01',
+        userId: 'user-01',
+        message: 'Olá, tenho interesse',
+        githubUrl: 'https://github.com/dracarys',
+        linkedinUrl: 'https://linkedin.com/dracarys',
+      }),
+    ).rejects.toThrow(new Error('You have already applied for this job'))
+  })
 })
