@@ -6,9 +6,7 @@ export const authenticate = async (
 ) => {
   try {
     await request.jwtVerify()
-    console.log('HEREEEE')
   } catch {
-    console.log('HEREEEEE 2')
     return reply.status(401).send({ message: 'Unauthorized' })
   }
 }
