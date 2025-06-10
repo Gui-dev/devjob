@@ -4,6 +4,7 @@ import { hash } from 'bcrypt'
 
 import { app } from '@/app'
 import { prisma } from '@/lib/prisma'
+import { JobApplicationError } from '@/http/errors/job-application-error'
 
 describe('Create Job Application flow e2e', () => {
   let jobId: string
@@ -12,7 +13,7 @@ describe('Create Job Application flow e2e', () => {
   beforeAll(async () => {
     await app.ready()
 
-    const candidate = await prisma.user.create({
+    await prisma.user.create({
       data: {
         name: 'Bruce Wayne',
         email: 'bruce@email.com',
@@ -72,5 +73,30 @@ describe('Create Job Application flow e2e', () => {
 
     expect(response.statusCode).toEqual(201)
     expect(response.body.jobApplicationId).toBeDefined()
+  })
+
+  it('should not be able to allow duplicate job applications', async () => {
+    await request(app.server)
+      .post(`/jobs/${jobId}/apply`)
+      .set('Authorization', `Bearer ${accessToken}`)
+      .send({
+        message: 'Gostaria de participar da vaga',
+        githubUrl: 'https://github.com/brucewayne',
+        linkedinUrl: 'https://linkedin.com/brucewayne',
+      })
+
+    const response = await request(app.server)
+      .post(`/jobs/${jobId}/apply`)
+      .set('Authorization', `Bearer ${accessToken}`)
+      .send({
+        message: 'Gostaria de participar da vaga',
+        githubUrl: 'https://github.com/brucewayne',
+        linkedinUrl: 'https://linkedin.com/brucewayne',
+      })
+
+    expect(response.statusCode).toEqual(409)
+    expect(response.body.message).toEqual(
+      'You have already applied for this job',
+    )
   })
 })
