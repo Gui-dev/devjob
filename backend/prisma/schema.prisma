@@ -26,13 +26,14 @@ enum JobLevel {
 }
 
 model User {
-  id        String   @id @default(cuid())
-  name      String
-  email     String   @unique
-  password  String
-  role      Role     @default(CANDIDATE)
-  createdAt DateTime @default(now()) @map("created_at")
-  Job       Job[]
+  id             String           @id @default(cuid())
+  name           String
+  email          String           @unique
+  password       String
+  role           Role             @default(CANDIDATE)
+  createdAt      DateTime         @default(now()) @map("created_at")
+  job            Job[]
+  jobApplication JobApplication[]
 
   @@map("users")
 }
@@ -49,7 +50,24 @@ model Job {
   technologies String[]
   createdAt    DateTime @default(now()) @map("created_at")
 
-  recruiter User @relation(fields: [recruiterId], references: [id])
+  recruiter      User             @relation(fields: [recruiterId], references: [id])
+  jobApplication JobApplication[]
 
   @@map("jobs")
+}
+
+model JobApplication {
+  id          String   @id @default(cuid())
+  jobId       String   @map("job_id")
+  userId      String   @map("user_id")
+  message     String?
+  githubUrl   String?  @map("github_url")
+  linkedinUrl String?  @map("linkedin_url")
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  job  Job  @relation(fields: [jobId], references: [id])
+  user User @relation(fields: [userId], references: [id])
+
+  @@unique([jobId, userId])
+  @@map("job_applications")
 }
