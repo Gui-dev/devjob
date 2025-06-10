@@ -6,6 +6,18 @@ import { prisma } from '@/lib/prisma'
 export class JobApplicationRepository
   implements IJobApplicationRepositoryContract
 {
+  public async findByUserId(userId: string): Promise<JobApplication[]> {
+    const jobApplications = await prisma.jobApplication.findMany({
+      where: {
+        userId,
+      },
+      include: {
+        job: true,
+      },
+    })
+
+    return jobApplications
+  }
   public async findByJobIdAndUserId(
     jobId: string,
     userId: string,

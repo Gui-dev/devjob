@@ -9,6 +9,14 @@ export class InMemoryJobApplicationRepository
 {
   private items: JobApplication[] = []
 
+  public async findByUserId(userId: string): Promise<JobApplication[]> {
+    const jobApplications = this.items.filter(
+      jobApplication => jobApplication.userId === userId,
+    )
+
+    return jobApplications
+  }
+
   public async findByJobIdAndUserId(
     jobId: string,
     userId: string,
