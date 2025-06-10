@@ -18,6 +18,7 @@ import { createJobRoute } from './http/controllers/jobs/create-job'
 import { listJobsRoute } from './http/controllers/jobs/list-jobs'
 import { getJobDetailsRoute } from './http/controllers/jobs/get-job-details'
 import { env } from './lib/env'
+import { createJobApplicationRoute } from './http/controllers/job-applications/create-job-application'
 
 export const app = Fastify().withTypeProvider<ZodTypeProvider>()
 
@@ -68,3 +69,4 @@ app.register(userProfileRoute)
 app.register(createJobRoute)
 app.register(listJobsRoute)
 app.register(getJobDetailsRoute)
+app.register(createJobApplicationRoute)
