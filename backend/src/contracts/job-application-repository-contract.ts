@@ -7,9 +7,17 @@ export type JobApplicationWithJob = Prisma.JobApplicationGetPayload<{
   }
 }>
 
+export type JobApplicationWithUserAndJob = Prisma.JobApplicationGetPayload<{
+  include: {
+    user: true
+    job: true
+  }
+}>
+
 export interface IJobApplicationRepositoryContract {
   create(data: ICreateJobApplicationDTO): Promise<JobApplication>
   findByUserId(userId: string): Promise<JobApplicationWithJob[]>
+  findByJobId(jobId: string): Promise<JobApplicationWithUserAndJob[]>
   findByJobIdAndUserId(
     jobId: string,
     userId: string,
