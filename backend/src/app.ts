@@ -22,6 +22,8 @@ import { env } from './lib/env'
 import { createJobApplicationRoute } from './http/controllers/job-applications/create-job-application'
 import { JobApplicationError } from './http/errors/job-application-error'
 import { getUserApplicationsRoute } from './http/controllers/job-applications/get-user-applications'
+import { UnauthorizedError } from './http/errors/unauthorized-error'
+import { getJobApplicationsRoute } from './http/controllers/job-applications/get-job-applications'
 
 export const app = Fastify().withTypeProvider<ZodTypeProvider>()
 
@@ -74,6 +76,7 @@ app.register(listJobsRoute)
 app.register(getJobDetailsRoute)
 app.register(createJobApplicationRoute)
 app.register(getUserApplicationsRoute)
+app.register(getJobApplicationsRoute)
 
 app.setErrorHandler((error, _, reply) => {
   if (hasZodFastifySchemaValidationErrors(error)) {
@@ -93,6 +96,10 @@ app.setErrorHandler((error, _, reply) => {
   }
 
   if (error instanceof JobApplicationError) {
+    return reply.status(error.statusCode).send({ message: error.message })
+  }
+
+  if (error instanceof UnauthorizedError) {
     return reply.status(error.statusCode).send({ message: error.message })
   }
 
