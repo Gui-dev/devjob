@@ -1,20 +1,39 @@
 import { randomUUID } from 'node:crypto'
 
-import type { IJobApplicationRepositoryContract } from '@/contracts/job-application-repository-contract'
-import type { JobApplication } from '../../../prisma/generated/prisma'
+import type {
+  IJobApplicationRepositoryContract,
+  JobApplicationWithJob,
+} from '@/contracts/job-application-repository-contract'
+import type { Job, JobApplication } from '../../../prisma/generated/prisma'
 import type { ICreateJobApplicationDTO } from '@/dtos/create-job-application-dto'
 
 export class InMemoryJobApplicationRepository
   implements IJobApplicationRepositoryContract
 {
   private items: JobApplication[] = []
+  private jobs: Job[] = []
 
-  public async findByUserId(userId: string): Promise<JobApplication[]> {
+  public async findByUserId(userId: string): Promise<JobApplicationWithJob[]> {
     const jobApplications = this.items.filter(
       jobApplication => jobApplication.userId === userId,
     )
 
-    return jobApplications
+    const result: JobApplicationWithJob[] = jobApplications.map(
+      jobApplication => {
+        const job = this.jobs.find(job => job.id === jobApplication.jobId)
+
+        if (!job) {
+          throw new Error('Job not found')
+        }
+
+        return {
+          ...jobApplication,
+          job,
+        }
+      },
+    )
+
+    return result
   }
 
   public async findByJobIdAndUserId(
@@ -52,5 +71,9 @@ export class InMemoryJobApplicationRepository
 
   public get() {
     return this.items
+  }
+
+  public setJobs(jobs: Job[]) {
+    this.jobs = jobs
   }
 }

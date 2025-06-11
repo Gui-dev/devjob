@@ -1,4 +1,7 @@
-import type { IJobApplicationRepositoryContract } from '@/contracts/job-application-repository-contract'
+import type {
+  IJobApplicationRepositoryContract,
+  JobApplicationWithJob,
+} from '@/contracts/job-application-repository-contract'
 import type { JobApplication } from '../../prisma/generated/prisma'
 import type { ICreateJobApplicationDTO } from '@/dtos/create-job-application-dto'
 import { prisma } from '@/lib/prisma'
@@ -6,7 +9,7 @@ import { prisma } from '@/lib/prisma'
 export class JobApplicationRepository
   implements IJobApplicationRepositoryContract
 {
-  public async findByUserId(userId: string): Promise<JobApplication[]> {
+  public async findByUserId(userId: string): Promise<JobApplicationWithJob[]> {
     const jobApplications = await prisma.jobApplication.findMany({
       where: {
         userId,
@@ -18,6 +21,7 @@ export class JobApplicationRepository
 
     return jobApplications
   }
+
   public async findByJobIdAndUserId(
     jobId: string,
     userId: string,
