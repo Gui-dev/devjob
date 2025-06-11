@@ -2,6 +2,7 @@ import { beforeEach, describe, expect, it } from 'vitest'
 
 import { InMemoryJobApplicationRepository } from '@/repositories/in-memory/in-memory-job-application-repository'
 import { GetJobApplicationsUseCase } from '../get-job-applications'
+import { UnauthorizedError } from '@/http/errors/unauthorized-error'
 
 let jobApplicationRepository: InMemoryJobApplicationRepository
 let sut: GetJobApplicationsUseCase
@@ -73,5 +74,22 @@ describe('Get Job Applications Use Case', () => {
     })
 
     expect(jobApplications).toHaveLength(1)
+  })
+
+  it('should not be able to return all applications for a job if user is not recruiter', async () => {
+    await jobApplicationRepository.create({
+      jobId: 'job-01',
+      userId: 'user-01',
+      message: 'Olá, tenho interesse',
+      githubUrl: 'https://github.com/dracarys',
+      linkedinUrl: 'https://linkedin.com/dracarys',
+    })
+
+    await expect(() =>
+      sut.execute({
+        jobId: 'job-01',
+        userId: 'user-01',
+      }),
+    ).rejects.toBeInstanceOf(UnauthorizedError)
   })
 })
