@@ -70,6 +70,7 @@ describe('Get User Applications flow', () => {
   it('should be able to return the user applications', async () => {
     const response = await request(app.server)
       .get('/me/applications')
+      .query({ page: 1, limit: 10 })
       .set('Authorization', `Bearer ${accessToken}`)
 
     console.log('Response', response.body)

@@ -56,7 +56,11 @@ describe('Get User Applications Use Case', () => {
       linkedinUrl: 'https://linkedin.com/dracarys',
     })
 
-    const { userApplications } = await sut.execute({ userId: 'user-01' })
+    const { userApplications } = await sut.execute({
+      userId: 'user-01',
+      page: 1,
+      limit: 10,
+    })
 
     expect(userApplications).toHaveLength(2)
     expect(userApplications).toEqual([

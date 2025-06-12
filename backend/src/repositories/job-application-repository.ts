@@ -10,7 +10,11 @@ import { prisma } from '@/lib/prisma'
 export class JobApplicationRepository
   implements IJobApplicationRepositoryContract
 {
-  public async findByUserId(userId: string): Promise<JobApplicationWithJob[]> {
+  public async findByUserId(
+    userId: string,
+    page: number,
+    limit: number,
+  ): Promise<JobApplicationWithJob[]> {
     const jobApplications = await prisma.jobApplication.findMany({
       where: {
         userId,
@@ -18,6 +22,11 @@ export class JobApplicationRepository
       include: {
         job: true,
       },
+      orderBy: {
+        createdAt: 'desc',
+      },
+      skip: (page - 1) * limit,
+      take: limit,
     })
 
     return jobApplications

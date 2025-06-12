@@ -2,6 +2,8 @@ import type { IJobApplicationRepositoryContract } from '@/contracts/job-applicat
 
 interface IGetUserApplicationRequest {
   userId: string
+  page: number
+  limit: number
 }
 
 export class GetUserApplicationUseCase {
@@ -9,9 +11,12 @@ export class GetUserApplicationUseCase {
     private jobApplicationRepository: IJobApplicationRepositoryContract,
   ) {}
 
-  public async execute({ userId }: IGetUserApplicationRequest) {
-    const userApplications =
-      await this.jobApplicationRepository.findByUserId(userId)
+  public async execute({ userId, page, limit }: IGetUserApplicationRequest) {
+    const userApplications = await this.jobApplicationRepository.findByUserId(
+      userId,
+      page,
+      limit,
+    )
 
     if (!userApplications) {
       throw new Error('User not found')

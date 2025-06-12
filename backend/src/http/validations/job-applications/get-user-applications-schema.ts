@@ -1,6 +1,11 @@
 import { z } from 'zod'
 
-export const getUserApplicationsSchema = z.object({
+export const getUserApplicationsQuerySchema = z.object({
+  page: z.coerce.number().min(1).default(1),
+  limit: z.coerce.number().min(1).max(50).default(10),
+})
+
+export const getUserApplicationsResponseSchema = z.object({
   userApplications: z.array(
     z.object({
       id: z.string().cuid(),
