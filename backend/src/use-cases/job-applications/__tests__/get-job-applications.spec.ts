@@ -68,12 +68,19 @@ describe('Get Job Applications Use Case', () => {
       linkedinUrl: 'https://linkedin.com/dracarys',
     })
 
-    const { jobApplications } = await sut.execute({
+    const { jobApplications, meta } = await sut.execute({
       jobId: 'job-01',
       userId: 'recruiter-01',
+      page: 1,
+      limit: 10,
     })
 
     expect(jobApplications).toHaveLength(1)
+    expect(meta).toEqual({
+      total: 1,
+      page: 1,
+      pages: 1,
+    })
   })
 
   it('should not be able to return all applications for a job if user is not recruiter', async () => {
@@ -89,6 +96,8 @@ describe('Get Job Applications Use Case', () => {
       sut.execute({
         jobId: 'job-01',
         userId: 'user-01',
+        page: 1,
+        limit: 10,
       }),
     ).rejects.toBeInstanceOf(UnauthorizedError)
   })

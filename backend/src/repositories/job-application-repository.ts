@@ -1,4 +1,5 @@
 import type {
+  IFindJobByIDResponse,
   IFindUserByIDResponse,
   IJobApplicationRepositoryContract,
   JobApplicationWithUserAndJob,
@@ -44,18 +45,35 @@ export class JobApplicationRepository
 
   public async findByJobId(
     jobId: string,
-  ): Promise<JobApplicationWithUserAndJob[]> {
-    const jobApplications = await prisma.jobApplication.findMany({
-      where: {
-        jobId,
-      },
-      include: {
-        user: true,
-        job: true,
-      },
-    })
+    page: number,
+    limit: number,
+  ): Promise<IFindJobByIDResponse> {
+    const [jobApplications, total] = await Promise.all([
+      await prisma.jobApplication.findMany({
+        where: {
+          jobId,
+        },
+        include: {
+          user: true,
+          job: true,
+        },
+        skip: (page - 1) * limit,
+        take: limit,
+        orderBy: {
+          createdAt: 'desc',
+        },
+      }),
+      await prisma.jobApplication.count({
+        where: {
+          jobId,
+        },
+      }),
+    ])
 
-    return jobApplications
+    return {
+      jobApplications,
+      total,
+    }
   }
 
   public async findByJobIdAndUserId(

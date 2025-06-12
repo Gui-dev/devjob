@@ -19,6 +19,11 @@ export interface IFindUserByIDResponse {
   total: number
 }
 
+export interface IFindJobByIDResponse {
+  jobApplications: JobApplicationWithUserAndJob[]
+  total: number
+}
+
 export interface IJobApplicationRepositoryContract {
   create(data: ICreateJobApplicationDTO): Promise<JobApplication>
   findByUserId(
@@ -26,7 +31,11 @@ export interface IJobApplicationRepositoryContract {
     page: number,
     limit: number,
   ): Promise<IFindUserByIDResponse>
-  findByJobId(jobId: string): Promise<JobApplicationWithUserAndJob[]>
+  findByJobId(
+    jobId: string,
+    page: number,
+    limit: number,
+  ): Promise<IFindJobByIDResponse>
   findByJobIdAndUserId(
     jobId: string,
     userId: string,

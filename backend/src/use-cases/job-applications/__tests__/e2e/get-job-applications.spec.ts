@@ -95,5 +95,10 @@ describe('Get Job Applications Flow', () => {
 
     expect(response.statusCode).toEqual(200)
     expect(response.body.jobApplications).toHaveLength(2)
+    expect(response.body.meta).toEqual({
+      total: 2,
+      page: 1,
+      pages: 1,
+    })
   })
 })
