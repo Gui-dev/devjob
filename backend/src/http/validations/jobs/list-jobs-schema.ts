@@ -5,6 +5,9 @@ export const listJobsSchema = z.object({
   type: z.enum(['REMOTE', 'ONSITE', 'HYBRID']).optional(),
   level: z.enum(['JUNIOR', 'PLENO', 'SENIOR']).optional(),
   location: z.string().optional(),
+  page: z.coerce.number().min(1).default(1),
+  limit: z.coerce.number().min(1).max(50).default(10),
+  sortBy: z.enum(['createdAt', 'company']).optional(),
 })
 
 export const listJobsSchemaResponse = z.object({

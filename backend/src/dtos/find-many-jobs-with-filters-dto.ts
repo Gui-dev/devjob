@@ -5,4 +5,7 @@ export interface IFindManyJobsWithFiltersDTO {
   location?: string
   type?: JobType
   level?: JobLevel
+  page?: number
+  limit?: number
+  sortBy?: 'createdAt' | 'company'
 }

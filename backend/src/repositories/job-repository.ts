@@ -28,29 +28,41 @@ export class JobRepository implements IJobRepositoryContract {
   public async findManyWithFilters(
     filters: IFindManyJobsWithFiltersDTO,
   ): Promise<Job[]> {
+    const {
+      technology,
+      location,
+      type,
+      level,
+      page = 1,
+      limit = 10,
+      sortBy = 'createdAt',
+    } = filters
+
     const jobs = await prisma.job.findMany({
       where: {
-        ...(filters.technology && {
+        ...(technology && {
           technologies: {
-            has: filters.technology,
+            has: technology,
           },
         }),
-        ...(filters.type && {
-          type: filters.type,
+        ...(type && {
+          type,
         }),
-        ...(filters.level && {
-          level: filters.level,
+        ...(level && {
+          level: level,
         }),
-        ...(filters.location && {
+        ...(location && {
           location: {
-            contains: filters.location,
+            contains: location,
             mode: 'insensitive',
           },
         }),
       },
       orderBy: {
-        createdAt: 'desc',
+        [sortBy]: 'asc',
       },
+      skip: (page - 1) * limit,
+      take: limit,
     })
 
     return jobs

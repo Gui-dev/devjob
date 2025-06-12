@@ -6,6 +6,9 @@ interface IListJobsFiltersProps {
   level?: JobLevel
   technology?: string
   location?: string
+  page?: number
+  limit?: number
+  sortBy?: 'createdAt' | 'company'
 }
 
 export class ListJobsWithFiltersUseCase {
@@ -16,12 +19,18 @@ export class ListJobsWithFiltersUseCase {
     level,
     technology,
     location,
+    page,
+    limit,
+    sortBy,
   }: IListJobsFiltersProps) {
     const jobs = await this.jobsRepository.findManyWithFilters({
       type,
       level,
       technology,
       location,
+      page,
+      limit,
+      sortBy,
     })
 
     if (!jobs) {
