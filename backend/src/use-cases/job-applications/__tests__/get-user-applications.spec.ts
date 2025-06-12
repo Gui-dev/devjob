@@ -56,18 +56,18 @@ describe('Get User Applications Use Case', () => {
       linkedinUrl: 'https://linkedin.com/dracarys',
     })
 
-    const { userApplications } = await sut.execute({
+    const { jobApplications, meta } = await sut.execute({
       userId: 'user-01',
       page: 1,
       limit: 10,
     })
 
-    expect(userApplications).toHaveLength(2)
-    expect(userApplications).toEqual([
+    expect(jobApplications).toHaveLength(2)
+    expect(jobApplications).toEqual([
       expect.objectContaining({ jobId: 'job-01' }),
       expect.objectContaining({ jobId: 'job-02' }),
     ])
-    expect(userApplications).toEqual([
+    expect(jobApplications).toEqual([
       expect.objectContaining({
         jobId: 'job-01',
         job: expect.objectContaining({
@@ -83,5 +83,11 @@ describe('Get User Applications Use Case', () => {
         }),
       }),
     ])
+
+    expect(meta).toEqual({
+      total: 2,
+      page: 1,
+      pages: 1,
+    })
   })
 })

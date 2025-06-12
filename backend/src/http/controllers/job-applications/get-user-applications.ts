@@ -32,13 +32,14 @@ export const getUserApplicationsRoute = (app: FastifyInstance) => {
         jobApplicationRepository,
       )
 
-      const { userApplications } = await getUserApplicationsUseCase.execute({
-        userId,
-        page,
-        limit,
-      })
+      const { jobApplications, meta } =
+        await getUserApplicationsUseCase.execute({
+          userId,
+          page,
+          limit,
+        })
 
-      return reply.status(200).send({ userApplications })
+      return reply.status(200).send({ jobApplications, meta })
     },
   )
 }

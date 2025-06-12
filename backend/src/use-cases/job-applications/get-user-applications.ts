@@ -9,19 +9,28 @@ interface IGetUserApplicationRequest {
 export class GetUserApplicationUseCase {
   constructor(
     private jobApplicationRepository: IJobApplicationRepositoryContract,
-  ) {}
+  ) { }
 
   public async execute({ userId, page, limit }: IGetUserApplicationRequest) {
-    const userApplications = await this.jobApplicationRepository.findByUserId(
+    const { jobApplications, total } = await this.jobApplicationRepository.findByUserId(
       userId,
       page,
       limit,
     )
 
-    if (!userApplications) {
+    if (!jobApplications) {
       throw new Error('User not found')
     }
 
-    return { userApplications }
+    const pages = Math.ceil(total / limit)
+
+    return {
+      jobApplications,
+      meta: {
+        total,
+        page,
+        pages,
+      }
+    }
   }
 }

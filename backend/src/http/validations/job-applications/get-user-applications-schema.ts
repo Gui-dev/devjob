@@ -6,7 +6,7 @@ export const getUserApplicationsQuerySchema = z.object({
 })
 
 export const getUserApplicationsResponseSchema = z.object({
-  userApplications: z.array(
+  jobApplications: z.array(
     z.object({
       id: z.string().cuid(),
       jobId: z.string().cuid(),
@@ -29,4 +29,9 @@ export const getUserApplicationsResponseSchema = z.object({
       }),
     }),
   ),
+  meta: z.object({
+    total: z.number(),
+    page: z.number(),
+    pages: z.number(),
+  }),
 })

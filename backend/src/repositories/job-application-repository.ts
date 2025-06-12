@@ -1,6 +1,6 @@
 import type {
+  IFindUserByIDResponse,
   IJobApplicationRepositoryContract,
-  JobApplicationWithJob,
   JobApplicationWithUserAndJob,
 } from '@/contracts/job-application-repository-contract'
 import type { JobApplication } from '../../prisma/generated/prisma'
@@ -14,22 +14,32 @@ export class JobApplicationRepository
     userId: string,
     page: number,
     limit: number,
-  ): Promise<JobApplicationWithJob[]> {
-    const jobApplications = await prisma.jobApplication.findMany({
-      where: {
-        userId,
-      },
-      include: {
-        job: true,
-      },
-      orderBy: {
-        createdAt: 'desc',
-      },
-      skip: (page - 1) * limit,
-      take: limit,
-    })
+  ): Promise<IFindUserByIDResponse> {
+    const [jobApplications, total] = await Promise.all([
+      prisma.jobApplication.findMany({
+        where: {
+          userId,
+        },
+        include: {
+          job: true,
+        },
+        orderBy: {
+          createdAt: 'desc',
+        },
+        skip: (page - 1) * limit,
+        take: limit,
+      }),
+      prisma.jobApplication.count({
+        where: {
+          userId,
+        },
+      }),
+    ])
 
-    return jobApplications
+    return {
+      jobApplications,
+      total,
+    }
   }
 
   public async findByJobId(

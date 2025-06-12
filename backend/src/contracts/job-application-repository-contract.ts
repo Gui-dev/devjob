@@ -14,9 +14,18 @@ export type JobApplicationWithUserAndJob = Prisma.JobApplicationGetPayload<{
   }
 }>
 
+export interface IFindUserByIDResponse {
+  jobApplications: JobApplicationWithJob[]
+  total: number
+}
+
 export interface IJobApplicationRepositoryContract {
   create(data: ICreateJobApplicationDTO): Promise<JobApplication>
-  findByUserId(userId: string, page: number, limit: number): Promise<JobApplicationWithJob[]>
+  findByUserId(
+    userId: string,
+    page: number,
+    limit: number,
+  ): Promise<IFindUserByIDResponse>
   findByJobId(jobId: string): Promise<JobApplicationWithUserAndJob[]>
   findByJobIdAndUserId(
     jobId: string,

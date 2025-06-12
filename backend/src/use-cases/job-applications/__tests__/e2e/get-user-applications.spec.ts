@@ -73,8 +73,14 @@ describe('Get User Applications flow', () => {
       .query({ page: 1, limit: 10 })
       .set('Authorization', `Bearer ${accessToken}`)
 
-    console.log('Response', response.body)
     expect(response.statusCode).toEqual(200)
-    expect(response.body.userApplications).toHaveLength(1)
+    expect(response.body.jobApplications).toHaveLength(1)
+    expect(response.body.meta).toEqual(
+      expect.objectContaining({
+        total: 1,
+        page: 1,
+        pages: 1,
+      }),
+    )
   })
 })
