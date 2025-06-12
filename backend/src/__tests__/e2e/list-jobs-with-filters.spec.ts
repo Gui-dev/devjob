@@ -121,4 +121,13 @@ describe('List JObs Flow E2E', () => {
     expect(response.statusCode).toEqual(200)
     expect(response.body.jobs).toHaveLength(7) // Total 15 + 2 no beforeEach, página 2: sobram 7
   })
+
+  it('should be able to order by company', async () => {
+    const response = await request(app.server).get('/jobs').query({
+      sortBy: 'company',
+    })
+
+    expect(response.statusCode).toEqual(200)
+    expect(response.body.jobs[0].company).toEqual('ABC')
+  })
 })
