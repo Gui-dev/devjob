@@ -36,7 +36,7 @@ describe('List JObs Flow E2E', () => {
         recruiterId: user.id,
         title: 'Frontend',
         description: 'Vaga React para a empresa XYZ',
-        company: 'XYZ',
+        company: 'ABC',
         location: 'Rio de Janeiro',
         type: 'REMOTE',
         level: 'PLENO',
@@ -89,5 +89,36 @@ describe('List JObs Flow E2E', () => {
     expect(response.statusCode).toEqual(200)
     expect(response.body.jobs).toHaveLength(1)
     expect(response.body.jobs[0].title).toEqual('Backend')
+  })
+
+  it('should be able to support pagination', async () => {
+    const recruiter = await prisma.user.findFirstOrThrow({
+      where: {
+        role: 'RECRUITER',
+      },
+    })
+
+    for (let i = 1; i <= 15; i++) {
+      await prisma.job.create({
+        data: {
+          recruiterId: recruiter.id,
+          title: `Backend ${i}`,
+          description: 'Vaga Node para a empresa XYZ',
+          company: 'XYZ',
+          location: 'São Paulo',
+          type: 'ONSITE',
+          level: 'JUNIOR',
+          technologies: ['Node.js'],
+        },
+      })
+    }
+
+    const response = await request(app.server).get('/jobs').query({
+      page: 2,
+      limit: 10,
+    })
+
+    expect(response.statusCode).toEqual(200)
+    expect(response.body.jobs).toHaveLength(7) // Total 15 + 2 no beforeEach, página 2: sobram 7
   })
 })

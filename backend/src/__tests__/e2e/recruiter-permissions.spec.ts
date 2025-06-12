@@ -60,7 +60,6 @@ describe('Recruiter Permissions Flow', () => {
         linkedinUrl: 'https://linkedin.com/brucewayne',
       })
 
-    console.log('RESPONSE: ', response.body)
     expect(response.statusCode).toEqual(403)
     expect(response.body.message).toEqual('Access denied')
   })

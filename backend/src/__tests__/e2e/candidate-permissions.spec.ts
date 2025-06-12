@@ -74,7 +74,6 @@ describe('Candidate Permissions Flow', () => {
       .get(`/jobs/${jobId}/applications`)
       .set('Authorization', `Bearer ${accessToken}`)
 
-    console.log('RESPONSE: ', response.body)
     expect(response.statusCode).toEqual(403)
     expect(response.body.message).toEqual('Access denied')
   })
