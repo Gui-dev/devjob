@@ -6,5 +6,8 @@ export const getStatsResponseSchema = z.object({
     totalCandidates: z.number(),
     totalRecruiters: z.number(),
     totalJobApplications: z.number(),
+    applicationsPerJob: z.array(
+      z.object({ jobId: z.string(), total: z.number() }),
+    ),
   }),
 })
