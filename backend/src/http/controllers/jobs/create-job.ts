@@ -14,7 +14,7 @@ export const createJobRoute = async (app: FastifyInstance) => {
   app.withTypeProvider<ZodTypeProvider>().post(
     '/jobs',
     {
-      preHandler: [authenticate, authorize(['RECRUITER'])],
+      preHandler: [authenticate, authorize(['RECRUITER', 'ADMIN'])],
       schema: {
         summary: 'Criar vaga de emprego',
         tags: ['Jobs'],
