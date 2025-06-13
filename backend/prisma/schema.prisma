@@ -26,6 +26,12 @@ enum JobLevel {
   SENIOR
 }
 
+enum ApplicationStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+}
+
 model User {
   id             String           @id @default(cuid())
   name           String
@@ -58,13 +64,14 @@ model Job {
 }
 
 model JobApplication {
-  id          String   @id @default(cuid())
-  jobId       String   @map("job_id")
-  userId      String   @map("user_id")
+  id          String            @id @default(cuid())
+  jobId       String            @map("job_id")
+  userId      String            @map("user_id")
   message     String?
-  githubUrl   String?  @map("github_url")
-  linkedinUrl String?  @map("linkedin_url")
-  createdAt   DateTime @default(now()) @map("created_at")
+  githubUrl   String?           @map("github_url")
+  linkedinUrl String?           @map("linkedin_url")
+  status      ApplicationStatus @default(PENDING)
+  createdAt   DateTime          @default(now()) @map("created_at")
 
   job  Job  @relation(fields: [jobId], references: [id])
   user User @relation(fields: [userId], references: [id])
