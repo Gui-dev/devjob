@@ -1,4 +1,5 @@
 import type {
+  FindByJobApplicationIdResponse,
   IFindJobByIDResponse,
   IFindUserByIDResponse,
   IJobApplicationRepositoryContract,
@@ -12,10 +13,13 @@ export class JobApplicationRepository
 {
   public async findByJobApplicationId(
     jobApplicationId: string,
-  ): Promise<JobApplication | null> {
+  ): Promise<FindByJobApplicationIdResponse | null> {
     const jobApplication = await prisma.jobApplication.findUnique({
       where: {
         id: jobApplicationId,
+      },
+      include: {
+        job: true,
       },
     })
 

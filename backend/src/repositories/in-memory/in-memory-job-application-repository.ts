@@ -1,6 +1,7 @@
 import { randomUUID } from 'node:crypto'
 
 import type {
+  FindByJobApplicationIdResponse,
   IFindJobByIDResponse,
   IFindUserByIDResponse,
   IJobApplicationRepositoryContract,
@@ -23,13 +24,25 @@ export class InMemoryJobApplicationRepository
 
   public async findByJobApplicationId(
     jobApplicationId: string,
-  ): Promise<JobApplication | null> {
-    const jobApplication =
-      this.items.find(
-        jobApplication => jobApplication.id === jobApplicationId,
-      ) ?? null
+  ): Promise<FindByJobApplicationIdResponse | null> {
+    const jobApplication = this.items.find(
+      jobApplication => jobApplication.id === jobApplicationId,
+    )
 
-    return jobApplication
+    if (!jobApplication) {
+      return null
+    }
+
+    const job = this.jobs.find(job => job.id === jobApplication.jobId)
+
+    if (!job) {
+      throw new Error('Job not found')
+    }
+
+    return {
+      ...jobApplication,
+      job,
+    }
   }
 
   public async findByUserId(

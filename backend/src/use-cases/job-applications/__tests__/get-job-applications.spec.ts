@@ -66,6 +66,7 @@ describe('Get Job Applications Use Case', () => {
       message: 'Olá, tenho interesse',
       githubUrl: 'https://github.com/dracarys',
       linkedinUrl: 'https://linkedin.com/dracarys',
+      status: 'PENDING',
     })
 
     const { jobApplications, meta } = await sut.execute({
@@ -90,6 +91,7 @@ describe('Get Job Applications Use Case', () => {
       message: 'Olá, tenho interesse',
       githubUrl: 'https://github.com/dracarys',
       linkedinUrl: 'https://linkedin.com/dracarys',
+      status: 'PENDING',
     })
 
     await expect(() =>

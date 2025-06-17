@@ -21,7 +21,11 @@ export class UpdateJobApplicationsStatusUseCase {
         jobApplicationId,
       )
 
-    if (jobApplicationExists?.userId !== userId) {
+    if (!jobApplicationExists) {
+      throw new Error('Job application not found')
+    }
+
+    if (jobApplicationExists.job.recruiterId !== userId) {
       throw new Error('Unauthorized to update this job application')
     }
 

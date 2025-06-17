@@ -1,6 +1,12 @@
 import type { ICreateJobApplicationDTO } from '@/dtos/create-job-application-dto'
 import type { JobApplication, Prisma } from '../../prisma/generated/prisma'
 
+export type FindByJobApplicationIdResponse = Prisma.JobApplicationGetPayload<{
+  include: {
+    job: true
+  }
+}>
+
 export type JobApplicationWithJob = Prisma.JobApplicationGetPayload<{
   include: {
     job: true
@@ -27,7 +33,7 @@ export interface IFindJobByIDResponse {
 export interface IJobApplicationRepositoryContract {
   findByJobApplicationId(
     jobApplicationId: string,
-  ): Promise<JobApplication | null>
+  ): Promise<FindByJobApplicationIdResponse | null>
   create(data: ICreateJobApplicationDTO): Promise<JobApplication>
   findByUserId(
     userId: string,
