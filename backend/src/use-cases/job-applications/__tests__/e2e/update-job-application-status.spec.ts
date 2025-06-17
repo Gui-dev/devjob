@@ -53,12 +53,6 @@ describe('Get User Applications flow', () => {
       },
     })
 
-    const loginResponse = await request(app.server).post('/users/login').send({
-      email: 'clark@email.com',
-      password: '123456',
-    })
-
-    accessToken = loginResponse.body.accessToken
     jobApplicationId = jobApplication.id
   })
 
@@ -70,14 +64,38 @@ describe('Get User Applications flow', () => {
   })
 
   it('should be able to update job application status', async () => {
+    const recruiterLoginResponse = await request(app.server)
+      .post('/users/login')
+      .send({
+        email: 'clark@email.com',
+        password: '123456',
+      })
+
     const response = await request(app.server)
       .patch(`/jobs/applications/${jobApplicationId}/status`)
-      .set('Authorization', `Bearer ${accessToken}`)
+      .set('Authorization', `Bearer ${recruiterLoginResponse.body.accessToken}`)
+      .send({ status: 'ACCEPTED' })
+
+    expect(response.statusCode).toEqual(200)
+    expect(response.body.jobApplicationId).toBeDefined()
+  })
+
+  it('should not be able to update job application status if user is not recruiter', async () => {
+    const candidateLoginResponse = await request(app.server)
+      .post('/users/login')
+      .send({
+        email: 'bruce@email.com',
+        password: '123456',
+      })
+
+    const response = await request(app.server)
+      .patch(`/jobs/applications/${jobApplicationId}/status`)
+      .set('Authorization', `Bearer ${candidateLoginResponse.body.accessToken}`)
       .send({ status: 'ACCEPTED' })
 
     console.log('RESPONSE: ', response.body)
 
-    expect(response.statusCode).toEqual(200)
-    expect(response.body.jobApplicationId).toBeDefined()
+    expect(response.statusCode).toEqual(403)
+    expect(response.body).toHaveProperty('message', 'Access denied')
   })
 })
