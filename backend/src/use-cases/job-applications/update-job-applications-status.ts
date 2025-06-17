@@ -1,0 +1,37 @@
+import type { IJobApplicationRepositoryContract } from '@/contracts/job-application-repository-contract'
+
+interface IUpdateJobApplicationsStatusRequest {
+  jobApplicationId: string
+  userId: string
+  status: 'PENDING' | 'ACCEPTED' | 'REJECTED'
+}
+
+export class UpdateJobApplicationsStatusUseCase {
+  constructor(
+    private readonly jobApplicationRepository: IJobApplicationRepositoryContract,
+  ) {}
+
+  public async execute({
+    jobApplicationId,
+    userId,
+    status,
+  }: IUpdateJobApplicationsStatusRequest) {
+    const jobApplicationExists =
+      await this.jobApplicationRepository.findByJobApplicationId(
+        jobApplicationId,
+      )
+
+    if (jobApplicationExists?.userId !== userId) {
+      throw new Error('Unauthorized to update this job application')
+    }
+
+    const jobApplication = await this.jobApplicationRepository.updateStatus(
+      jobApplicationId,
+      status,
+    )
+
+    return {
+      jobApplicationId: jobApplication.id,
+    }
+  }
+}
