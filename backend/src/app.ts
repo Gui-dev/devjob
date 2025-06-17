@@ -27,6 +27,7 @@ import { getJobApplicationsRoute } from './http/controllers/job-applications/get
 import { getStatsRoute } from './http/controllers/stats/get-stats'
 import { getCandidateStatsRoute } from './http/controllers/stats/get-candidate-stats'
 import { getRecruiterStatsRoute } from './http/controllers/stats/get-recruiter-stats'
+import { updateJobApplicationStatusRoute } from './http/controllers/job-applications/update-job-application-status'
 
 export const app = Fastify().withTypeProvider<ZodTypeProvider>()
 
@@ -83,6 +84,7 @@ app.register(getJobApplicationsRoute)
 app.register(getStatsRoute)
 app.register(getCandidateStatsRoute)
 app.register(getRecruiterStatsRoute)
+app.register(updateJobApplicationStatusRoute)
 
 app.setErrorHandler((error, _, reply) => {
   if (hasZodFastifySchemaValidationErrors(error)) {

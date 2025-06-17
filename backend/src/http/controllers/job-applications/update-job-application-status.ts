@@ -1,13 +1,13 @@
 import type { FastifyInstance } from 'fastify'
 import type { ZodTypeProvider } from 'fastify-type-provider-zod'
 
-import { authenticate } from '@/middlewares/auth'
-import { authorize } from '@/middlewares/authorize'
 import {
   updateJoApplicationsResponseSchema,
   updateJobApplicationsBodySchema,
   updateJobApplicationsStatusParamsSchema,
 } from '@/http/validations/job-applications/update-job-applications-status-schema'
+import { authenticate } from '@/middlewares/auth'
+import { authorize } from '@/middlewares/authorize'
 import { JobApplicationRepository } from '@/repositories/job-application-repository'
 import { UpdateJobApplicationsStatusUseCase } from '@/use-cases/job-applications/update-job-applications-status'
 
