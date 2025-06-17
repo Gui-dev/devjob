@@ -1,6 +1,7 @@
 import { InMemoryJobApplicationRepository } from '@/repositories/in-memory/in-memory-job-application-repository'
 import { beforeEach, describe, expect, it } from 'vitest'
 import { UpdateJobApplicationsStatusUseCase } from '../update-job-applications-status'
+import { UnauthorizedError } from '@/http/errors/unauthorized-error'
 
 let jobApplicationRepository: InMemoryJobApplicationRepository
 let sut: UpdateJobApplicationsStatusUseCase
@@ -62,5 +63,24 @@ describe('Update Job Application Status Use Case', () => {
     })
 
     expect(jobApplicationId).toEqual(expect.any(String))
+  })
+
+  it('should not be able to update job application status if user is not recruiter', async () => {
+    const jobApplication = await jobApplicationRepository.create({
+      jobId: 'job-01',
+      userId: 'candidate-01',
+      message: 'Olá, tenho interesse',
+      githubUrl: 'https://github.com/dracarys',
+      linkedinUrl: 'https://linkedin.com/dracarys',
+      status: 'PENDING',
+    })
+
+    await expect(() =>
+      sut.execute({
+        jobApplicationId: jobApplication.id,
+        userId: 'candidate-01',
+        status: 'ACCEPTED',
+      }),
+    ).rejects.toBeInstanceOf(UnauthorizedError)
   })
 })

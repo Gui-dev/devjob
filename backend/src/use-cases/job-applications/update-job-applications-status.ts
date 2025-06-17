@@ -1,4 +1,5 @@
 import type { IJobApplicationRepositoryContract } from '@/contracts/job-application-repository-contract'
+import { UnauthorizedError } from '@/http/errors/unauthorized-error'
 
 interface IUpdateJobApplicationsStatusRequest {
   jobApplicationId: string
@@ -26,7 +27,7 @@ export class UpdateJobApplicationsStatusUseCase {
     }
 
     if (jobApplicationExists.job.recruiterId !== userId) {
-      throw new Error('Unauthorized to update this job application')
+      throw new UnauthorizedError('Unauthorized to update this job application')
     }
 
     const jobApplication = await this.jobApplicationRepository.updateStatus(
