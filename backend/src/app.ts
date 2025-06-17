@@ -28,6 +28,7 @@ import { getStatsRoute } from './http/controllers/stats/get-stats'
 import { getCandidateStatsRoute } from './http/controllers/stats/get-candidate-stats'
 import { getRecruiterStatsRoute } from './http/controllers/stats/get-recruiter-stats'
 import { updateJobApplicationStatusRoute } from './http/controllers/job-applications/update-job-application-status'
+import { NotFoundError } from './http/errors/not-found-error'
 
 export const app = Fastify().withTypeProvider<ZodTypeProvider>()
 
@@ -101,6 +102,10 @@ app.setErrorHandler((error, _, reply) => {
 
   if (error.code === 'FST_JWT_AUTHORIZATION_TOKEN_INVALID') {
     return reply.status(401).send({ message: 'Invalid token.' })
+  }
+
+  if (error instanceof NotFoundError) {
+    return reply.status(error.statusCode).send({ message: error.message })
   }
 
   if (error instanceof JobApplicationError) {

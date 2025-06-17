@@ -1,4 +1,5 @@
 import type { IJobApplicationRepositoryContract } from '@/contracts/job-application-repository-contract'
+import { NotFoundError } from '@/http/errors/not-found-error'
 import { UnauthorizedError } from '@/http/errors/unauthorized-error'
 
 interface IUpdateJobApplicationsStatusRequest {
@@ -23,7 +24,7 @@ export class UpdateJobApplicationsStatusUseCase {
       )
 
     if (!jobApplicationExists) {
-      throw new Error('Job application not found')
+      throw new NotFoundError('Job application not found')
     }
 
     if (jobApplicationExists.job.recruiterId !== userId) {
