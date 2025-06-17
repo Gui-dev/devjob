@@ -114,4 +114,20 @@ describe('Get User Applications flow', () => {
 
     expect(response.statusCode).toEqual(400)
   })
+
+  it('should be able to return 404 for invalid applications id', async () => {
+    const recruiterLoginResponse = await request(app.server)
+      .post('/users/login')
+      .send({
+        email: 'clark@email.com',
+        password: '123456',
+      })
+
+    const response = await request(app.server)
+      .patch('/jobs/applications/cmc15oenz0005g5e8arypunlj/status')
+      .set('Authorization', `Bearer ${recruiterLoginResponse.body.accessToken}`)
+      .send({ status: 'ACCEPTED' })
+
+    expect(response.statusCode).toEqual(404)
+  })
 })
