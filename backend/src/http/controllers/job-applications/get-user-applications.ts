@@ -11,7 +11,7 @@ import {
 
 export const getUserApplicationsRoute = (app: FastifyInstance) => {
   app.withTypeProvider<ZodTypeProvider>().get(
-    '/me/applications',
+    '/jobs/me/applications',
     {
       preHandler: [authenticate],
       schema: {
