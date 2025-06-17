@@ -75,7 +75,7 @@ describe('Get User Applications flow', () => {
       .patch(`/jobs/applications/${jobApplicationId}/status`)
       .set('Authorization', `Bearer ${recruiterLoginResponse.body.accessToken}`)
       .send({ status: 'ACCEPTED' })
-
+    console.log('RESPONSE: ', response.body)
     expect(response.statusCode).toEqual(200)
     expect(response.body.jobApplicationId).toBeDefined()
   })
@@ -93,9 +93,25 @@ describe('Get User Applications flow', () => {
       .set('Authorization', `Bearer ${candidateLoginResponse.body.accessToken}`)
       .send({ status: 'ACCEPTED' })
 
-    console.log('RESPONSE: ', response.body)
-
     expect(response.statusCode).toEqual(403)
     expect(response.body).toHaveProperty('message', 'Access denied')
+  })
+
+  it('should be able to return 400 if application id is not cuid', async () => {
+    const recruiterLoginResponse = await request(app.server)
+      .post('/users/login')
+      .send({
+        email: 'clark@email.com',
+        password: '123456',
+      })
+
+    const response = await request(app.server)
+      .patch('/jobs/applications/invalid-job-application-id/status')
+      .set('Authorization', `Bearer ${recruiterLoginResponse.body.accessToken}`)
+      .send({ status: 'ACCEPTED' })
+
+    console.log('RESPONSE: ', response.statusCode)
+
+    expect(response.statusCode).toEqual(400)
   })
 })
