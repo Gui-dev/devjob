@@ -21,6 +21,17 @@ export class InMemoryJobApplicationRepository
   private jobs: Job[] = []
   private users: User[] = []
 
+  public async findByJobApplicationId(
+    jobApplicationId: string,
+  ): Promise<JobApplication | null> {
+    const jobApplication =
+      this.items.find(
+        jobApplication => jobApplication.id === jobApplicationId,
+      ) ?? null
+
+    return jobApplication
+  }
+
   public async findByUserId(
     userId: string,
     page: number,
@@ -110,6 +121,7 @@ export class InMemoryJobApplicationRepository
     message,
     githubUrl,
     linkedinUrl,
+    status,
   }: ICreateJobApplicationDTO): Promise<JobApplication> {
     const jobApplication: JobApplication = {
       id: randomUUID(),
@@ -118,9 +130,24 @@ export class InMemoryJobApplicationRepository
       message: message ?? null,
       githubUrl: githubUrl ?? null,
       linkedinUrl: linkedinUrl ?? null,
+      status,
       createdAt: new Date(),
     }
     this.items.push(jobApplication)
+    return jobApplication
+  }
+
+  public async updateStatus(
+    jobApplicationId: string,
+    status: 'PENDING' | 'ACCEPTED' | 'REJECTED',
+  ): Promise<JobApplication> {
+    const jobApplication = this.items.find(
+      jobApplication => jobApplication.id === jobApplicationId,
+    )
+    if (!jobApplication) {
+      throw new Error('Job application not found')
+    }
+    jobApplication.status = status
     return jobApplication
   }
 

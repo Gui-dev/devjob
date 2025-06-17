@@ -2,7 +2,6 @@ import type {
   IFindJobByIDResponse,
   IFindUserByIDResponse,
   IJobApplicationRepositoryContract,
-  JobApplicationWithUserAndJob,
 } from '@/contracts/job-application-repository-contract'
 import type { JobApplication } from '../../prisma/generated/prisma'
 import type { ICreateJobApplicationDTO } from '@/dtos/create-job-application-dto'
@@ -11,6 +10,18 @@ import { prisma } from '@/lib/prisma'
 export class JobApplicationRepository
   implements IJobApplicationRepositoryContract
 {
+  public async findByJobApplicationId(
+    jobApplicationId: string,
+  ): Promise<JobApplication | null> {
+    const jobApplication = await prisma.jobApplication.findUnique({
+      where: {
+        id: jobApplicationId,
+      },
+    })
+
+    return jobApplication
+  }
+
   public async findByUserId(
     userId: string,
     page: number,
@@ -95,6 +106,22 @@ export class JobApplicationRepository
   public async create(data: ICreateJobApplicationDTO): Promise<JobApplication> {
     const jobApplication = await prisma.jobApplication.create({
       data,
+    })
+
+    return jobApplication
+  }
+
+  public async updateStatus(
+    jobApplicationId: string,
+    status: 'PENDING' | 'ACCEPTED' | 'REJECTED',
+  ): Promise<JobApplication> {
+    const jobApplication = await prisma.jobApplication.update({
+      where: {
+        id: jobApplicationId,
+      },
+      data: {
+        status,
+      },
     })
 
     return jobApplication

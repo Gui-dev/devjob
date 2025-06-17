@@ -4,4 +4,5 @@ export interface ICreateJobApplicationDTO {
   message?: string
   githubUrl?: string
   linkedinUrl?: string
+  status: 'PENDING' | 'ACCEPTED' | 'REJECTED'
 }
