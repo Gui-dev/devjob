@@ -29,4 +29,17 @@ describe('Send Application Confirmation Use Case', () => {
       }),
     )
   })
+
+  it('should be able to send directly when email service provided', async () => {
+    const sendEmailMock = vi.fn().mockResolvedValue(null)
+    sut = new SendApplicationConfirmationUseCase({ sendEmail: sendEmailMock })
+
+    await sut.execute({
+      to: 'bruce@example.com',
+      subject: 'test',
+      html: '<p>I am Batman</p>',
+    })
+
+    expect(sendEmailMock).toHaveBeenCalled()
+  })
 })
