@@ -30,6 +30,9 @@ import { getRecruiterStatsRoute } from './http/controllers/stats/get-recruiter-s
 import { updateJobApplicationStatusRoute } from './http/controllers/job-applications/update-job-application-status'
 import { NotFoundError } from './http/errors/not-found-error'
 
+import bullMQPlugin from './plugins/bullmq'
+import { emailWorker } from './services/email-processor'
+
 export const app = Fastify().withTypeProvider<ZodTypeProvider>()
 
 app.register(fastifyCookie)
@@ -44,6 +47,8 @@ app.register(jwt, {
     expiresIn: '15m',
   },
 })
+app.register(bullMQPlugin)
+emailWorker
 
 app.setValidatorCompiler(validatorCompiler)
 app.setSerializerCompiler(serializerCompiler)

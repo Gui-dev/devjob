@@ -1,17 +1,28 @@
 import { type Job, Worker } from 'bullmq'
-import { NodemailerEmailService } from './nodemailer-email-service'
+import { redis } from '@/lib/redis'
+import { EMAIL_QUEUE_NAME, type EmailJobData } from './queues'
+import { sendEmail } from '@/lib/nodemailer'
 
-const emailService = new NodemailerEmailService()
-
-export const emailWorker = new Worker(
-  'email',
+export const emailWorker = new Worker<EmailJobData>(
+  EMAIL_QUEUE_NAME,
   async (job: Job) => {
-    await emailService.sendEmail(job.data)
+    try {
+      console.log(`Processing email job ${job.id}`)
+      await sendEmail(job.data)
+    } catch (error) {
+      console.error(`Error processing email job ${job.id}`, error)
+      throw error
+    }
   },
   {
-    connection: {
-      host: 'localhost',
-      port: 6379,
-    },
+    connection: redis,
   },
 )
+
+emailWorker.on('completed', job => {
+  console.log(`Email Job ${job.id} completed`)
+})
+
+emailWorker.on('failed', (job, err) => {
+  console.log(`Email Job ${job?.id} failed`, err)
+})

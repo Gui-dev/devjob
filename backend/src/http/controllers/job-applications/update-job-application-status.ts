@@ -34,14 +34,20 @@ export const updateJobApplicationStatusRoute = (app: FastifyInstance) => {
       const jobApplicationRepository = new JobApplicationRepository()
       const updateJobApplicationStatusUseCase =
         new UpdateJobApplicationsStatusUseCase(jobApplicationRepository)
-      const { jobApplicationId } =
+      const { jobApplication } =
         await updateJobApplicationStatusUseCase.execute({
           jobApplicationId: job_application_id,
           userId,
           status,
         })
 
-      return reply.status(200).send({ jobApplicationId })
+      await app.bullmq.emailQueue.add('sendEmail', {
+        to: `${jobApplication.user.email}`,
+        subject: `Atualização para a vaga ${jobApplication.job.title}`,
+        html: `<p>Olá, sua candidatura para a vaga ${jobApplication.job.title} foi atualizada: Sua candidatura foi ${jobApplication.status}</p>`,
+      })
+
+      return reply.status(200).send({ jobApplicationId: jobApplication.id })
     },
   )
 }

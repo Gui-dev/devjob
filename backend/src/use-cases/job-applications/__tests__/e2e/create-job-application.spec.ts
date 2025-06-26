@@ -1,9 +1,21 @@
-import { afterAll, beforeAll, describe, expect, it } from 'vitest'
+import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest'
 import request from 'supertest'
 import { hash } from 'bcrypt'
 
 import { app } from '@/app'
 import { prisma } from '@/lib/prisma'
+import { emailQueue } from '@/services/queues'
+
+vi.mock('@/services/queues', () => {
+  const emailQueue = {
+    add: vi.fn(),
+  }
+
+  return {
+    emailQueue,
+    EMAIL_QUEUE_NAME: 'email',
+  }
+})
 
 describe('Create Job Application flow e2e', () => {
   let jobId: string
@@ -36,7 +48,7 @@ describe('Create Job Application flow e2e', () => {
         title: 'Backend',
         description: 'Vaga Node para a empresa XYZ',
         company: 'XYZ',
-        location: 'São Paulo',
+        location: 'Sao Paulo',
         type: 'ONSITE',
         level: 'JUNIOR',
         technologies: ['Node.js'],
@@ -72,6 +84,7 @@ describe('Create Job Application flow e2e', () => {
 
     expect(response.statusCode).toEqual(201)
     expect(response.body.jobApplicationId).toBeDefined()
+    expect(emailQueue.add).toHaveBeenCalledTimes(1)
   })
 
   it('should not be able to allow duplicate job applications', async () => {

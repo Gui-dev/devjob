@@ -34,7 +34,7 @@ export interface IJobApplicationRepositoryContract {
   findByJobApplicationId(
     jobApplicationId: string,
   ): Promise<FindByJobApplicationIdResponse | null>
-  create(data: ICreateJobApplicationDTO): Promise<JobApplication>
+  create(data: ICreateJobApplicationDTO): Promise<JobApplicationWithUserAndJob>
   findByUserId(
     userId: string,
     page: number,
@@ -52,5 +52,5 @@ export interface IJobApplicationRepositoryContract {
   updateStatus(
     jobApplicationId: string,
     status: 'PENDING' | 'ACCEPTED' | 'REJECTED',
-  ): Promise<JobApplication>
+  ): Promise<JobApplicationWithUserAndJob>
 }

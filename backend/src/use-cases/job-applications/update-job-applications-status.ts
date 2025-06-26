@@ -37,7 +37,7 @@ export class UpdateJobApplicationsStatusUseCase {
     )
 
     return {
-      jobApplicationId: jobApplication.id,
+      jobApplication,
     }
   }
 }

@@ -11,7 +11,7 @@ interface ICreateJobApplicationRequest {
 
 export class CreateJobApplicationUseCase {
   constructor(
-    private jobApplicationRepository: IJobApplicationRepositoryContract,
+    private readonly jobApplicationRepository: IJobApplicationRepositoryContract,
   ) {}
 
   public async execute({
@@ -37,10 +37,11 @@ export class CreateJobApplicationUseCase {
       message,
       githubUrl,
       linkedinUrl,
+      status: 'PENDING',
     })
 
     return {
-      jobApplicationId: jobApplication.id,
+      jobApplication,
     }
   }
 }

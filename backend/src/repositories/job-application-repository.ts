@@ -3,6 +3,7 @@ import type {
   IFindJobByIDResponse,
   IFindUserByIDResponse,
   IJobApplicationRepositoryContract,
+  JobApplicationWithUserAndJob,
 } from '@/contracts/job-application-repository-contract'
 import type { JobApplication } from '../../prisma/generated/prisma'
 import type { ICreateJobApplicationDTO } from '@/dtos/create-job-application-dto'
@@ -107,9 +108,15 @@ export class JobApplicationRepository
     return jobApplication
   }
 
-  public async create(data: ICreateJobApplicationDTO): Promise<JobApplication> {
+  public async create(
+    data: ICreateJobApplicationDTO,
+  ): Promise<JobApplicationWithUserAndJob> {
     const jobApplication = await prisma.jobApplication.create({
       data,
+      include: {
+        job: true,
+        user: true,
+      },
     })
 
     return jobApplication
@@ -118,13 +125,17 @@ export class JobApplicationRepository
   public async updateStatus(
     jobApplicationId: string,
     status: 'PENDING' | 'ACCEPTED' | 'REJECTED',
-  ): Promise<JobApplication> {
+  ): Promise<JobApplicationWithUserAndJob> {
     const jobApplication = await prisma.jobApplication.update({
       where: {
         id: jobApplicationId,
       },
       data: {
         status,
+      },
+      include: {
+        job: true,
+        user: true,
       },
     })
 

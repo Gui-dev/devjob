@@ -35,7 +35,8 @@ export const createJobApplicationRoute = (app: FastifyInstance) => {
       const createJobApplicationUseCase = new CreateJobApplicationUseCase(
         jobApplicationRepository,
       )
-      const { jobApplicationId } = await createJobApplicationUseCase.execute({
+
+      const { jobApplication } = await createJobApplicationUseCase.execute({
         jobId: job_id,
         userId,
         message,
@@ -43,7 +44,13 @@ export const createJobApplicationRoute = (app: FastifyInstance) => {
         linkedinUrl,
       })
 
-      return reply.status(201).send({ jobApplicationId })
+      await app.bullmq.emailQueue.add('sendEmail', {
+        to: `${jobApplication.user.email}`,
+        subject: `Candidatura recebida com sucesso - para a vaga ${jobApplication.job.title}`,
+        html: `<p>Olá test, sua candidatura foi enviada com sucesso para a vaga ${jobApplication.job.title}</p>`,
+      })
+
+      return reply.status(201).send({ jobApplicationId: jobApplication.id })
     },
   )
 }

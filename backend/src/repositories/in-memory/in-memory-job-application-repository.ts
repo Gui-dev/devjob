@@ -135,7 +135,7 @@ export class InMemoryJobApplicationRepository
     githubUrl,
     linkedinUrl,
     status,
-  }: ICreateJobApplicationDTO): Promise<JobApplication> {
+  }: ICreateJobApplicationDTO): Promise<JobApplicationWithUserAndJob> {
     const jobApplication: JobApplication = {
       id: randomUUID(),
       jobId,
@@ -146,8 +146,19 @@ export class InMemoryJobApplicationRepository
       status,
       createdAt: new Date(),
     }
+    const user = this.users.find(user => user.id === jobApplication.userId)
+    const job = this.jobs.find(job => job.id === jobApplication.jobId)
+
+    if (!user || !job) {
+      throw new Error('User or job not found')
+    }
+
     this.items.push(jobApplication)
-    return jobApplication
+    return {
+      ...jobApplication,
+      user,
+      job,
+    }
   }
 
   public async updateStatus(
