@@ -13,7 +13,7 @@ export const userRegisterRoute = async (app: FastifyInstance) => {
     '/users/register',
     {
       schema: {
-        summary: 'Cadastrar usuário',
+        summary: 'Cadastrar usuario',
         tags: ['users'],
         body: userRegisterSchema,
         response: {
@@ -22,7 +22,7 @@ export const userRegisterRoute = async (app: FastifyInstance) => {
       },
     },
     async (request, reply) => {
-      const { name, email, password } = request.body
+      const { name, email, password, role } = request.body
 
       const userRepository = new UserRepository()
       const userRegisterUseCase = new UserRegisterUseCase(userRepository)
@@ -31,6 +31,7 @@ export const userRegisterRoute = async (app: FastifyInstance) => {
         name,
         email,
         password,
+        role,
       })
 
       return reply.status(201).send({ id: user.id })

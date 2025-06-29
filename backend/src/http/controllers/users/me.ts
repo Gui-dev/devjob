@@ -5,14 +5,18 @@ import { authenticate } from '@/middlewares/auth'
 import { UserRepository } from '@/repositories/user-repository'
 import { UserProfileUseCase } from '@/use-cases/users/user-profile'
 import { userProfileSchema } from '@/http/validations/users/user-profile-schema'
+import { authorize } from '@/middlewares/authorize'
 
 export const userProfileRoute = async (app: FastifyInstance) => {
   app.withTypeProvider<ZodTypeProvider>().get(
     '/me',
     {
-      preHandler: authenticate,
+      preHandler: [
+        authenticate,
+        authorize(['CANDIDATE', 'RECRUITER', 'ADMIN']),
+      ],
       schema: {
-        summary: 'Informações do usuário',
+        summary: 'Informacoes do usuario',
         tags: ['users'],
         response: {
           200: userProfileSchema,
