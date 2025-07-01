@@ -1,10 +1,11 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { beforeEach, describe, expect, it, vi, type Mock } from 'vitest'
 import { render, screen, waitFor } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
-
-import LoginPage from '../(auth)/login/page'
-import { AuthProvider } from '@/components/auth-provider'
 import { useRouter } from 'next/navigation'
+import { signIn } from 'next-auth/react'
+
+import LoginPage from './../page'
+import { AuthProvider } from '@/components/auth-provider'
 
 vi.mock('next/navigation', () => ({
   useRouter: vi.fn(),
@@ -55,6 +56,33 @@ describe('Login Page', () => {
       expect(
         screen.getByText(/a senha deve ter no minimo 6 caracteres/i),
       ).toBeInTheDocument()
+    })
+  })
+
+  it('sould be able to calls signIn when form is valid', async () => {
+    const mockedSignIn = signIn as unknown as Mock
+    mockedSignIn.mockResolvedValue({ ok: true })
+
+    render(
+      <AuthProvider>
+        <LoginPage />
+      </AuthProvider>,
+    )
+
+    await userEvent.type(
+      screen.getByPlaceholderText(/email/i),
+      'bruce@email.com',
+    )
+    await userEvent.type(screen.getByPlaceholderText(/senha/i), '123456')
+
+    await userEvent.click(screen.getByRole('button', { name: /entrar/i }))
+
+    await waitFor(() => {
+      expect(mockedSignIn).toHaveBeenCalledWith('credentials', {
+        email: 'bruce@email.com',
+        password: '123456',
+        redirect: false,
+      })
     })
   })
 })
