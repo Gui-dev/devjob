@@ -5,11 +5,11 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { toast } from 'sonner'
 import Link from 'next/link'
 import { signIn } from 'next-auth/react'
+import { useRouter } from 'next/navigation'
 
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { loginSchema, type LoginSchemaData } from '@/validations/login-schema'
-import { api } from '@/lib/api'
 
 const LoginPage = () => {
   const {
@@ -17,16 +17,17 @@ const LoginPage = () => {
     handleSubmit,
     register,
   } = useForm<LoginSchemaData>({ resolver: zodResolver(loginSchema) })
+  const router = useRouter()
 
   const handleLogin = async (data: LoginSchemaData) => {
     try {
-      const response = await signIn('credentials', {
+      await signIn('credentials', {
         email: data.email,
         password: data.password,
         redirect: false,
       })
       toast.success('Login realizado com sucesso')
-      console.log('RESPONSE: ', response)
+      router.push('/')
     } catch (error) {
       console.log(error)
     }
