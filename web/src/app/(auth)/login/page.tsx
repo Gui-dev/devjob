@@ -21,13 +21,17 @@ const LoginPage = () => {
 
   const handleLogin = async (data: LoginSchemaData) => {
     try {
-      await signIn('credentials', {
+      const result = await signIn('credentials', {
         email: data.email,
         password: data.password,
         redirect: false,
       })
-      toast.success('Login realizado com sucesso')
-      router.push('/')
+      if (result?.ok) {
+        toast.success('Login realizado com sucesso')
+        router.push('/')
+      } else {
+        toast.error('Email ou senha incorretos')
+      }
     } catch (error) {
       console.log(error)
     }
