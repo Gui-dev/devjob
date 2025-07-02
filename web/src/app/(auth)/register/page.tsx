@@ -91,7 +91,7 @@ const RegisterPage = () => {
             }
           >
             <SelectTrigger className="w-full">
-              <SelectValue placeholder="Selecione uma tipo" />
+              <SelectValue placeholder="Selecione um tipo de conta" />
             </SelectTrigger>
 
             <SelectContent>
@@ -105,7 +105,7 @@ const RegisterPage = () => {
         </div>
 
         <Button type="submit" className="w-full">
-          Entrar
+          Criar conta
         </Button>
       </form>
       <p className="text-sm text-center mt-4">

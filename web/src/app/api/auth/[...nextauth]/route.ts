@@ -33,7 +33,9 @@ const handler = NextAuth({
             },
           })
 
-          const user = meResponse.data
+          console.log('meResponse: ', meResponse)
+
+          const { user } = meResponse.data
 
           return {
             id: user.id,
