@@ -42,7 +42,9 @@ const RegisterPage = () => {
       router.push('/login')
     } catch (error) {
       const err = error as AxiosError
-
+      if (err.response?.status === 409) {
+        toast.error('Este e-mail já está em uso')
+      }
       console.log('ERROR: ', err)
     }
   }
@@ -100,7 +102,9 @@ const RegisterPage = () => {
             </SelectContent>
           </Select>
           {errors.role && (
-            <p className="text-sm text-red-500">{errors.role.message}</p>
+            <p className="text-sm text-red-500" data-testid="role-error">
+              {errors.role.message}
+            </p>
           )}
         </div>
 
