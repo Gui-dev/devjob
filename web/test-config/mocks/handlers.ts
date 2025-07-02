@@ -11,6 +11,8 @@ export const handlers = [
   http.post('http://localhost:3333/users/register', async ({ request }) => {
     const data = (await request.json()) as RegisterSchemaData
 
+    console.log('DATA: ', data)
+
     if (data.email === 'emailexists@email.com') {
       return HttpResponse.json(
         { error: 'Email already exists' },

@@ -117,4 +117,51 @@ describe('Register Page', () => {
       expect(pushMock).toHaveBeenCalledWith('/login')
     })
   })
+
+  it('should not be able to register with an existing email', async () => {
+    render(
+      <AuthProvider>
+        <RegisterPage />
+      </AuthProvider>,
+    )
+
+    vi.mocked(api.post).mockRejectedValue({
+      data: { error: 'Email already exists' },
+      status: 409,
+    })
+
+    await user.type(screen.getByPlaceholderText(/nome/i), 'Fake Name')
+    await user.type(
+      screen.getByPlaceholderText(/email/i),
+      'emailexists@email.com',
+    )
+    await user.type(screen.getByPlaceholderText(/senha/i), '123456')
+
+    const select = await screen.findByTestId('select-trigger')
+    await user.pointer({
+      keys: '[MouseLeft]',
+      target: select,
+    })
+
+    const option = await screen.findByRole('option', { name: /candidato/i })
+    await user.pointer({
+      keys: '[MouseLeft]',
+      target: option,
+    })
+
+    await user.click(screen.getByRole('button', { name: /criar conta/i }))
+
+    await waitFor(() => {
+      expect(api.post).toHaveBeenCalledWith('/users/register', {
+        name: 'Fake Name',
+        email: 'emailexists@email.com',
+        password: '123456',
+        role: 'CANDIDATE',
+      })
+
+      expect(toast.success).not.toHaveBeenCalled()
+      expect(toast.error).toHaveBeenCalledWith('Este e-mail já está em uso')
+      expect(pushMock).not.toHaveBeenCalledWith('/login')
+    })
+  })
 })

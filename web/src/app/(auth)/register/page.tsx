@@ -42,7 +42,7 @@ const RegisterPage = () => {
       router.push('/login')
     } catch (error) {
       const err = error as AxiosError
-      if (err.response?.status === 409) {
+      if (err.response?.status === 409 || err.status === 409) {
         toast.error('Este e-mail já está em uso')
       }
       console.log('ERROR: ', err)
