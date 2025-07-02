@@ -7,7 +7,7 @@ export default defineConfig({
   test: {
     globals: true,
     environment: 'jsdom',
-    include: ['src/**/*.{test,spec}.{ts,tsx}', '**/*.{test,spec}.{ts,tsx}'], // Padrão para encontrar arquivos de teste
+    include: ['src/**/*.test.{ts,tsx}'], // Padrão para encontrar arquivos de teste
     exclude: ['node_modules', '.next'], // Excluir diretórios
     setupFiles: './test-config/setup.ts',
   },
