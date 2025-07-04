@@ -75,7 +75,13 @@ app.register(swagger, {
     ],
   },
 })
-app.register(swaggerUI)
+app.register(swaggerUI, {
+  routePrefix: '/docs',
+  uiConfig: {
+    docExpansion: 'full',
+    deepLinking: false,
+  },
+})
 
 app.register(userRegisterRoute)
 app.register(userLoginRoute)
