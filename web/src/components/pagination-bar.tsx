@@ -1,3 +1,4 @@
+import { useJobsFilters } from '@/hooks/use-jobs-filters'
 import {
   Pagination,
   PaginationContent,
@@ -17,6 +18,7 @@ export const PaginationBar = ({
   currentPage,
   totalPages,
 }: IPaginationProps) => {
+  const { updateFilters } = useJobsFilters()
   const maxVisiblePages = 5
 
   const generatePages = () => {
@@ -38,14 +40,18 @@ export const PaginationBar = ({
       <PaginationContent>
         {currentPage > 1 && (
           <PaginationItem>
-            <PaginationPrevious href={`?page=${currentPage - 1}`} />
+            <PaginationPrevious
+              onClick={() => updateFilters({ page: currentPage - 1 })}
+            />
           </PaginationItem>
         )}
 
         {pages[0] > 1 && (
           <>
             <PaginationItem>
-              <PaginationLink href="?page=1">1</PaginationLink>
+              <PaginationLink onClick={() => updateFilters({ page: 1 })}>
+                1
+              </PaginationLink>
             </PaginationItem>
             {pages[0] > 2 && (
               <PaginationItem>
@@ -59,7 +65,7 @@ export const PaginationBar = ({
           return (
             <PaginationItem key={page}>
               <PaginationLink
-                href={`?page=${page}`}
+                onClick={() => updateFilters({ page })}
                 isActive={page === currentPage}
               >
                 {page}
@@ -76,7 +82,9 @@ export const PaginationBar = ({
               </PaginationItem>
             )}
             <PaginationItem>
-              <PaginationLink href={`?page=${totalPages}`}>
+              <PaginationLink
+                onClick={() => updateFilters({ page: totalPages })}
+              >
                 {totalPages}
               </PaginationLink>
             </PaginationItem>
@@ -85,7 +93,9 @@ export const PaginationBar = ({
 
         {currentPage < totalPages && (
           <PaginationItem>
-            <PaginationNext href={`?page=${currentPage + 1}`} />
+            <PaginationNext
+              onClick={() => updateFilters({ page: currentPage + 1 })}
+            />
           </PaginationItem>
         )}
       </PaginationContent>
