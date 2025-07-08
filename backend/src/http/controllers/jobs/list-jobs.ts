@@ -27,9 +27,9 @@ export const listJobsRoute = async (app: FastifyInstance) => {
       const jobRepository = new JobRepository()
       const listJobsUseCase = new ListJobsWithFiltersUseCase(jobRepository)
 
-      const { jobs } = await listJobsUseCase.execute(filters)
+      const { jobs, meta } = await listJobsUseCase.execute(filters)
 
-      return reply.status(200).send({ jobs })
+      return reply.status(200).send({ jobs, meta })
     },
   )
 }

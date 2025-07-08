@@ -24,6 +24,11 @@ export const listJobsSchemaResponse = z.object({
       createdAt: z.date(),
     }),
   ),
+  meta: z.object({
+    total: z.number(),
+    page: z.number(),
+    pages: z.number(),
+  }),
 })
 
 export type ListJobsSchema = z.infer<typeof listJobsSchema>

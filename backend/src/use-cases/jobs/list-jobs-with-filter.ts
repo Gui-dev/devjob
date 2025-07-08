@@ -19,11 +19,11 @@ export class ListJobsWithFiltersUseCase {
     level,
     technology,
     location,
-    page,
-    limit,
+    page = 1,
+    limit = 10,
     sortBy,
   }: IListJobsFiltersProps) {
-    const jobs = await this.jobsRepository.findManyWithFilters({
+    const { jobs, total } = await this.jobsRepository.findManyWithFilters({
       type,
       level,
       technology,
@@ -37,6 +37,15 @@ export class ListJobsWithFiltersUseCase {
       throw new Error('Jobs not found')
     }
 
-    return { jobs }
+    const pages = Math.ceil(total / limit)
+
+    return {
+      jobs,
+      meta: {
+        total,
+        page,
+        pages,
+      },
+    }
   }
 }
