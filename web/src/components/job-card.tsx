@@ -13,7 +13,10 @@ export interface IJobProps {
   description: string
   company: string
   location: string
+  level: 'JUNIOR' | 'PLENO' | 'SENIOR'
   type: 'ONSITE' | 'REMOTE' | 'HYBRID'
+  technologies: string[]
+  createdAt: Date
 }
 
 interface IJobCardProps {
@@ -21,6 +24,7 @@ interface IJobCardProps {
 }
 
 export const JobCard = ({ job }: IJobCardProps) => {
+  console.log('JOB: ', job)
   return (
     <Link href={`/job/${job.id}/details`}>
       <Card className="hover:bg-gray-950 transition">
@@ -34,7 +38,9 @@ export const JobCard = ({ job }: IJobCardProps) => {
         <CardContent>
           <p>{job.description.slice(0, 100)}...</p>
 
-          <span>{job.type}</span>
+          <span>
+            {job.type} - {job.level}
+          </span>
         </CardContent>
       </Card>
     </Link>
