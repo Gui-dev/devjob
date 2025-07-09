@@ -88,4 +88,10 @@ describe('', () => {
 
     expect(screen.queryByLabelText('Página anterior')).not.toBeInTheDocument()
   })
+
+  it('should not be able to render next button on the last page', async () => {
+    render(<PaginationBar currentPage={5} totalPages={5} />)
+
+    expect(screen.queryByLabelText('Próxima página')).not.toBeInTheDocument()
+  })
 })
