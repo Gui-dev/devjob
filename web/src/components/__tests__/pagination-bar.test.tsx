@@ -75,4 +75,11 @@ describe('', () => {
 
     expect(mockUpdateFilters).toHaveBeenCalledWith({ page: 1 })
   })
+
+  it('should be able to call Next Button is clicked', async () => {
+    render(<PaginationBar currentPage={2} totalPages={5} />)
+    await user.click(screen.getByLabelText('Próxima página'))
+
+    expect(mockUpdateFilters).toHaveBeenCalledWith({ page: 3 })
+  })
 })
