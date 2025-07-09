@@ -2,8 +2,9 @@
 
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-
 import { SlidersHorizontal } from 'lucide-react'
+
+import { useJobsFilters } from '@/hooks/use-jobs-filters'
 import { Button } from './ui/button'
 import {
   Sheet,
@@ -25,7 +26,6 @@ import {
   filtersSchema,
   type FiltersSchemaData,
 } from '@/validations/filters-schema'
-import { useJobsFilters } from '@/hooks/use-jobs-filters'
 
 export const SidebarFilters = () => {
   const { handleSubmit, register, setValue } = useForm<FiltersSchemaData>({
@@ -55,10 +55,10 @@ export const SidebarFilters = () => {
 
   return (
     <Sheet>
-      <SheetTrigger>
+      <SheetTrigger asChild>
         <Button variant="outline">
           <div className="flex items-center justify-center gap-2">
-            <SlidersHorizontal className="size-4" />
+            <SlidersHorizontal className="size-4" data-testid="sliders-icon" />
             <span>Filtros</span>
           </div>
         </Button>
