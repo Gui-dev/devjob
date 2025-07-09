@@ -101,4 +101,10 @@ describe('', () => {
 
     expect(screen.getAllByText('More pages')[0]).toBeInTheDocument()
   })
+
+  it('should render last page link and final ellipsis when currentPage is far from totalPages', () => {
+    render(<PaginationBar currentPage={1} totalPages={10} />)
+    expect(screen.getByText('10')).toBeInTheDocument()
+    expect(screen.getAllByText('More pages')[0]).toBeInTheDocument()
+  })
 })
