@@ -49,7 +49,10 @@ export const PaginationBar = ({
         {pages[0] > 1 && (
           <>
             <PaginationItem>
-              <PaginationLink onClick={() => updateFilters({ page: 1 })}>
+              <PaginationLink
+                href="#"
+                onClick={() => updateFilters({ page: 1 })}
+              >
                 1
               </PaginationLink>
             </PaginationItem>
@@ -65,6 +68,7 @@ export const PaginationBar = ({
           return (
             <PaginationItem key={page}>
               <PaginationLink
+                href="#"
                 onClick={() => updateFilters({ page })}
                 isActive={page === currentPage}
               >
@@ -83,6 +87,7 @@ export const PaginationBar = ({
             )}
             <PaginationItem>
               <PaginationLink
+                href="#"
                 onClick={() => updateFilters({ page: totalPages })}
               >
                 {totalPages}
