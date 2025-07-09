@@ -41,6 +41,8 @@ export const PaginationBar = ({
         {currentPage > 1 && (
           <PaginationItem>
             <PaginationPrevious
+              title="Página anterior"
+              aria-label="Página anterior"
               onClick={() => updateFilters({ page: currentPage - 1 })}
             />
           </PaginationItem>
@@ -49,10 +51,7 @@ export const PaginationBar = ({
         {pages[0] > 1 && (
           <>
             <PaginationItem>
-              <PaginationLink
-                href="#"
-                onClick={() => updateFilters({ page: 1 })}
-              >
+              <PaginationLink onClick={() => updateFilters({ page: 1 })}>
                 1
               </PaginationLink>
             </PaginationItem>
@@ -68,7 +67,6 @@ export const PaginationBar = ({
           return (
             <PaginationItem key={page}>
               <PaginationLink
-                href="#"
                 onClick={() => updateFilters({ page })}
                 isActive={page === currentPage}
               >
@@ -87,7 +85,6 @@ export const PaginationBar = ({
             )}
             <PaginationItem>
               <PaginationLink
-                href="#"
                 onClick={() => updateFilters({ page: totalPages })}
               >
                 {totalPages}
@@ -99,6 +96,8 @@ export const PaginationBar = ({
         {currentPage < totalPages && (
           <PaginationItem>
             <PaginationNext
+              title="Próxima página"
+              aria-label="Próxima página"
               onClick={() => updateFilters({ page: currentPage + 1 })}
             />
           </PaginationItem>
