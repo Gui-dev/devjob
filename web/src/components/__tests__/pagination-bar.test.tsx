@@ -107,4 +107,14 @@ describe('', () => {
     expect(screen.getByText('10')).toBeInTheDocument()
     expect(screen.getAllByText('More pages')[0]).toBeInTheDocument()
   })
+
+  it('should render pagination correctly when totalPages is equal to maxVisiblePages', () => {
+    render(<PaginationBar currentPage={3} totalPages={5} />)
+    expect(screen.getByText('1')).toBeInTheDocument()
+    expect(screen.getByText('2')).toBeInTheDocument()
+    expect(screen.getByText('3')).toBeInTheDocument()
+    expect(screen.getByText('4')).toBeInTheDocument()
+    expect(screen.getByText('5')).toBeInTheDocument()
+    expect(screen.queryByText('More pages')).not.toBeInTheDocument()
+  })
 })
