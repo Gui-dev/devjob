@@ -82,4 +82,10 @@ describe('', () => {
 
     expect(mockUpdateFilters).toHaveBeenCalledWith({ page: 3 })
   })
+
+  it('should not be able to render previous button on the first page', async () => {
+    render(<PaginationBar currentPage={1} totalPages={5} />)
+
+    expect(screen.queryByLabelText('Página anterior')).not.toBeInTheDocument()
+  })
 })
