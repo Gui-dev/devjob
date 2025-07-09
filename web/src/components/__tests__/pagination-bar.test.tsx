@@ -94,4 +94,11 @@ describe('', () => {
 
     expect(screen.queryByLabelText('Próxima página')).not.toBeInTheDocument()
   })
+
+  it('should be able to render first page link and initial ellipsis when currentPage > 3', () => {
+    render(<PaginationBar currentPage={4} totalPages={10} />)
+    expect(screen.getByText('1')).toBeInTheDocument()
+
+    expect(screen.getAllByText('More pages')[0]).toBeInTheDocument()
+  })
 })
