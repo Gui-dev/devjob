@@ -53,4 +53,32 @@ describe('<SidebarFilters />', () => {
     expect(screen.getByRole('button', { name: 'Filtros' })).toBeInTheDocument()
     expect(screen.getByTestId('sliders-icon')).toBeInTheDocument()
   })
+
+  it('should be able to render all filter input fields and selects placeholders', async () => {
+    render(<SidebarFilters />)
+
+    await user.click(screen.getByRole('button', { name: 'Filtros' }))
+
+    await waitFor(() => {
+      expect(
+        screen.getByRole('heading', { name: 'Filtrar vagas por:' }),
+      ).toBeInTheDocument()
+
+      expect(screen.getByPlaceholderText(/tecnologia/i)).toBeInTheDocument()
+      expect(screen.getByPlaceholderText(/localização/i)).toBeInTheDocument()
+
+      expect(screen.getByText(/tipo/i)).toBeInTheDocument()
+      expect(screen.getByText(/nível/i)).toBeInTheDocument()
+      expect(screen.getByText(/ordenar por/i)).toBeInTheDocument()
+
+      expect(
+        screen.getByRole('button', { name: /filtrar/i }),
+      ).toBeInTheDocument()
+      expect(
+        screen.getByRole('button', { name: /limpar filtros/i }),
+      ).toBeInTheDocument()
+    })
+
+    screen.debug()
+  })
 })
