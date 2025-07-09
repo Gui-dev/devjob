@@ -60,4 +60,12 @@ describe('', () => {
     expect(screen.getByLabelText('Página anterior')).toBeInTheDocument()
     expect(screen.getByLabelText('Próxima página')).toBeInTheDocument()
   })
+
+  it('should be able to call updateFilters when a page link is clicked', async () => {
+    render(<PaginationBar currentPage={1} totalPages={5} />)
+
+    await user.click(screen.getByText('3'))
+
+    expect(mockUpdateFilters).toHaveBeenCalledWith({ page: 3 })
+  })
 })
