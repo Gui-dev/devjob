@@ -87,7 +87,7 @@ export const SidebarFilters = () => {
               setValue('type', value as FiltersSchemaData['type'])
             }
           >
-            <SelectTrigger className="w-full">
+            <SelectTrigger className="w-full" data-testid="select-type">
               <SelectValue placeholder="Tipo" />
             </SelectTrigger>
             <SelectContent>
@@ -102,11 +102,11 @@ export const SidebarFilters = () => {
               setValue('level', value as FiltersSchemaData['level'])
             }
           >
-            <SelectTrigger className="w-full">
+            <SelectTrigger className="w-full" data-testid="select-level">
               <SelectValue placeholder="Nível" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="JUNIOR">Júnior</SelectItem>
+              <SelectItem value="JUNIOR">Junior</SelectItem>
               <SelectItem value="PLENO">Pleno</SelectItem>
               <SelectItem value="SENIOR">Sênior</SelectItem>
             </SelectContent>
@@ -117,7 +117,7 @@ export const SidebarFilters = () => {
               setValue('sortBy', value as FiltersSchemaData['sortBy'])
             }
           >
-            <SelectTrigger className="w-full">
+            <SelectTrigger className="w-full" data-testid="select-order">
               <SelectValue placeholder="Ordenar por" />
             </SelectTrigger>
             <SelectContent>
