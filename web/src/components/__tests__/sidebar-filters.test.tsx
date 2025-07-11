@@ -136,4 +136,52 @@ describe('<SidebarFilters />', () => {
       })
     })
   })
+
+  it('should be able to call resetFilters and clear form fields when reset button is clicked', async () => {
+    render(<SidebarFilters />)
+
+    await user.click(screen.getByRole('button', { name: 'Filtros' }))
+
+    await user.type(screen.getByPlaceholderText(/tecnologia/i), 'React')
+    await user.type(screen.getByPlaceholderText(/localização/i), 'São Paulo')
+
+    const selectedType = screen.getByTestId('select-type')
+    await user.pointer({
+      keys: '[MouseLeft]',
+      target: selectedType,
+    })
+
+    const optionType = await screen.findByRole('option', { name: /remoto/i })
+    await user.pointer({
+      keys: '[MouseLeft]',
+      target: optionType,
+    })
+
+    const selectedLevel = screen.getByTestId('select-level')
+    await user.pointer({
+      keys: '[MouseLeft]',
+      target: selectedLevel,
+    })
+
+    const optionLevel = await screen.findByRole('option', { name: /junior/i })
+    await user.pointer({
+      keys: '[MouseLeft]',
+      target: optionLevel,
+    })
+
+    const selectedOrder = screen.getByTestId('select-order')
+    await user.pointer({
+      keys: '[MouseLeft]',
+      target: selectedOrder,
+    })
+
+    const optionOrder = await screen.findByRole('option', { name: /empresa/i })
+    await user.pointer({
+      keys: '[MouseLeft]',
+      target: optionOrder,
+    })
+    await user.click(screen.getByRole('button', { name: /limpar filtros/i }))
+
+    expect(mockResetFilters).toHaveBeenCalledTimes(1)
+  })
 })
