@@ -178,4 +178,30 @@ describe('<JobDetailsPage />', () => {
       ).toBeInTheDocument()
     })
   })
+
+  it('should be able to render job details when job data is successfully fetched', async () => {
+    currentUseParamsValue = { job_id: 'job-123' }
+    currentUseJobDetailsReturn = {
+      job: MOCKED_JOB,
+      isError: false,
+      isLoading: false,
+    }
+    mockUseSession.mockReturnValue({ data: null, status: 'unauthenticated' })
+
+    render(
+      <QueryClientProvider client={queryClient}>
+        <JobDetails />
+      </QueryClientProvider>,
+    )
+
+    await waitFor(() => {
+      expect(screen.getByTestId('job-card-details')).toBeInTheDocument()
+      expect(screen.getByTestId('job-card-details')).toHaveTextContent(
+        MOCKED_JOB.title,
+      )
+    })
+
+    expect(screen.queryByTestId('skeleton')).not.toBeInTheDocument()
+    expect(screen.queryByTestId('alert')).not.toBeInTheDocument()
+  })
 })
