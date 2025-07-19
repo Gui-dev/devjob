@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import { render, screen } from '@testing-library/react'
+import { render, screen, waitFor } from '@testing-library/react'
 import * as nextNavigation from 'next/navigation'
 import * as nextAuthReact from 'next-auth/react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
@@ -146,5 +146,36 @@ describe('<JobDetailsPage />', () => {
     expect(screen.getAllByTestId('skeleton')).toHaveLength(4)
     expect(screen.queryByTestId('job-card-details')).not.toBeInTheDocument()
     expect(screen.queryByTestId('alert')).not.toBeInTheDocument()
+  })
+
+  it('should be able to render an error when there is an error fetching job details', async () => {
+    currentUseParamsValue = { job_id: 'job-error' }
+    currentUseJobDetailsReturn = {
+      job: undefined,
+      isError: true,
+      isLoading: false,
+    }
+    mockUseSession.mockReturnValue({ data: null, status: 'unauthenticated' })
+
+    render(
+      <QueryClientProvider client={queryClient}>
+        <JobDetails />
+      </QueryClientProvider>,
+    )
+
+    await waitFor(() => {
+      expect(screen.getByTestId('alert')).toBeInTheDocument()
+      expect(screen.getByTestId('alert-title')).toHaveTextContent(
+        'Erro ao carregar vaga',
+      )
+      expect(
+        screen.getByText(
+          /não foi possível encontrar essa vaga. Verifique o link ou tente/i,
+        ),
+      ).toBeInTheDocument()
+      expect(
+        screen.getByRole('link', { name: /Voltar para vagas/i }),
+      ).toBeInTheDocument()
+    })
   })
 })
