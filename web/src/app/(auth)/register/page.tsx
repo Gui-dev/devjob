@@ -22,6 +22,14 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import Link from 'next/link'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card'
 
 const RegisterPage = () => {
   const {
@@ -50,74 +58,91 @@ const RegisterPage = () => {
   }
 
   return (
-    <div className="flex flex-col items-center justify-center h-svh w-full">
-      <form
-        className="flex flex-col items-center justify-center gap-4 w-md bg-zinc-900 rounded-md mt-10 p-4"
-        onSubmit={handleSubmit(handleRegister)}
-      >
-        <div className="text-center">
-          <h2>Faça seu cadastro</h2>
-          <h3 className="text-xs font-bold">Rápido e fácil</h3>
-        </div>
-        <div className="w-full space-y-1">
-          <Input type="text" placeholder="Nome" {...register('name')} />
-          {errors.name && (
-            <p className="text-sm text-red-500">{errors.name.message}</p>
-          )}
-        </div>
+    <div className="flex flex-col items-center justify-center min-h-svh px-4">
+      <Card className="w-full max-w-md shadow-lg border border-zinc-800 bg-zinc-950">
+        <CardHeader className="text-center space-y-2">
+          <CardTitle className="text-2xl font-bold text-primary">
+            Criar conta
+          </CardTitle>
+          <CardDescription className="text-zinc-400">
+            Comece sua jornada com a DevJobs agora mesmo
+          </CardDescription>
+        </CardHeader>
 
-        <div className="w-full space-y-1">
-          <Input type="email" placeholder="Email" {...register('email')} />
-          {errors.email && (
-            <p className="text-sm text-red-500">{errors.email.message}</p>
-          )}
-        </div>
+        <form
+          className="flex flex-col items-center justify-center gap-4"
+          onSubmit={handleSubmit(handleRegister)}
+        >
+          <CardContent className="w-full space-y-4">
+            <div className="w-full space-y-1">
+              <Input type="text" placeholder="Nome" {...register('name')} />
+              {errors.name && (
+                <p className="text-sm text-red-500">{errors.name.message}</p>
+              )}
+            </div>
 
-        <div className="w-full space-y-1">
-          <Input
-            type="password"
-            placeholder="Senha"
-            {...register('password')}
-          />
-          {errors.password && (
-            <p className="text-sm text-red-500">{errors.password.message}</p>
-          )}
-        </div>
+            <div className="w-full space-y-1">
+              <Input type="email" placeholder="Email" {...register('email')} />
+              {errors.email && (
+                <p className="text-sm text-red-500">{errors.email.message}</p>
+              )}
+            </div>
 
-        <div className="w-full space-y-3">
-          <Label>Tipo de conta:</Label>
-          <Select
-            value={selectedRole}
-            onValueChange={value =>
-              setValue('role', value as RegisterSchemaData['role'])
-            }
-          >
-            <SelectTrigger className="w-full">
-              <SelectValue placeholder="Selecione um tipo de conta" />
-            </SelectTrigger>
+            <div className="w-full space-y-1">
+              <Input
+                type="password"
+                placeholder="Senha"
+                {...register('password')}
+              />
+              {errors.password && (
+                <p className="text-sm text-red-500">
+                  {errors.password.message}
+                </p>
+              )}
+            </div>
 
-            <SelectContent>
-              <SelectItem value="CANDIDATE">Candidato</SelectItem>
-              <SelectItem value="RECRUITER">Recrutador</SelectItem>
-            </SelectContent>
-          </Select>
-          {errors.role && (
-            <p className="text-sm text-red-500" data-testid="role-error">
-              {errors.role.message}
+            <div className="w-full space-y-3">
+              <Label>Tipo de conta:</Label>
+              <Select
+                value={selectedRole}
+                onValueChange={value =>
+                  setValue('role', value as RegisterSchemaData['role'])
+                }
+              >
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Selecione um tipo de conta" />
+                </SelectTrigger>
+
+                <SelectContent>
+                  <SelectItem value="CANDIDATE">Candidato</SelectItem>
+                  <SelectItem value="RECRUITER">Recrutador</SelectItem>
+                </SelectContent>
+              </Select>
+              {errors.role && (
+                <p className="text-sm text-red-500" data-testid="role-error">
+                  {errors.role.message}
+                </p>
+              )}
+            </div>
+          </CardContent>
+
+          <CardFooter className="flex flex-col gap-4 w-full">
+            <Button type="submit" className="w-full">
+              Criar conta
+            </Button>
+
+            <p className="text-sm text-center mt-4">
+              Já possui uma conta?{' '}
+              <Link
+                href="/login"
+                className="text-yellow-500 font-semibold hover:underline"
+              >
+                Fazer login
+              </Link>
             </p>
-          )}
-        </div>
-
-        <Button type="submit" className="w-full">
-          Criar conta
-        </Button>
-      </form>
-      <p className="text-sm text-center mt-4">
-        Já possui uma conta?{' '}
-        <Link href="/login" className="text-base text-yellow-500 font-bold">
-          Fazer login
-        </Link>
-      </p>
+          </CardFooter>
+        </form>
+      </Card>
     </div>
   )
 }

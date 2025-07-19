@@ -13,7 +13,7 @@ import Link from 'next/link'
 import { ApplyToJobForm } from './apply-to-job-form'
 import { useSession } from 'next-auth/react'
 
-interface IJobCardDetailsProps {
+export interface IJobCardDetailsProps {
   job: IJobProps
 }
 
