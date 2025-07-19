@@ -34,9 +34,17 @@ vi.mock('@/hooks/use-job-details', () => ({
   useJobDetails: vi.fn(() => currentUseJobDetailsReturn),
 }))
 
-const mockUseSession = vi.fn()
+let currentUseSessionReturn: {
+  // biome-ignore lint/suspicious: test
+  data: any
+  status: 'authenticated' | 'unauthenticated' | 'loading'
+} = {
+  data: null,
+  status: 'unauthenticated',
+}
 vi.mock('next-auth/react', () => ({
-  useSession: mockUseSession,
+  useSession: vi.fn(() => currentUseSessionReturn),
+  getSession: vi.fn(() => currentUseSessionReturn.data),
 }))
 
 vi.mock('@/components/ui/skeleton', () => ({
@@ -67,15 +75,15 @@ vi.mock('next/link', () => ({
   ),
 }))
 
-vi.mock('@/components/job-card-details', () => ({
-  JobCardDetails: ({ job }: IJobCardDetailsProps) => (
-    <div data-testid="job-card-details">{job.title}</div>
-  ),
-}))
+// vi.mock('@/components/job-card-details', () => ({
+//   JobCardDetails: ({ job }: IJobCardDetailsProps) => (
+//     <div data-testid="job-card-details">{job.title}</div>
+//   ),
+// }))
 
 vi.mock('@/components/apply-to-job-form', () => ({
   ApplyToJobForm: ({ jobId }: { jobId: string }) => (
-    <div data-testid="apply-to-job-form">Apply for {jobId}</div>
+    <div data-testid="apply-to-job-form">Envie sua candiatura</div>
   ),
 }))
 
@@ -117,7 +125,7 @@ const MOCKED_JOB: IJobProps = {
 
 describe('<JobDetailsPage />', () => {
   beforeEach(() => {
-    mockUseSession.mockClear()
+    currentUseSessionReturn = { data: null, status: 'unauthenticated' }
     queryClient.clear()
     currentUseJobDetailsReturn = {
       job: undefined,
@@ -135,7 +143,7 @@ describe('<JobDetailsPage />', () => {
       isError: false,
       isLoading: true,
     }
-    mockUseSession.mockReturnValue({ data: null, status: 'unauthenticated' })
+    currentUseSessionReturn = { data: null, status: 'unauthenticated' }
 
     render(
       <QueryClientProvider client={queryClient}>
@@ -155,7 +163,7 @@ describe('<JobDetailsPage />', () => {
       isError: true,
       isLoading: false,
     }
-    mockUseSession.mockReturnValue({ data: null, status: 'unauthenticated' })
+    currentUseSessionReturn = { data: null, status: 'unauthenticated' }
 
     render(
       <QueryClientProvider client={queryClient}>
@@ -186,7 +194,7 @@ describe('<JobDetailsPage />', () => {
       isError: false,
       isLoading: false,
     }
-    mockUseSession.mockReturnValue({ data: null, status: 'unauthenticated' })
+    currentUseSessionReturn = { data: null, status: 'unauthenticated' }
 
     render(
       <QueryClientProvider client={queryClient}>
@@ -195,13 +203,42 @@ describe('<JobDetailsPage />', () => {
     )
 
     await waitFor(() => {
-      expect(screen.getByTestId('job-card-details')).toBeInTheDocument()
-      expect(screen.getByTestId('job-card-details')).toHaveTextContent(
-        MOCKED_JOB.title,
-      )
+      expect(screen.getByText(MOCKED_JOB.title)).toBeInTheDocument()
+      expect(screen.getByText(MOCKED_JOB.company)).toBeInTheDocument()
+      expect(screen.getByText(MOCKED_JOB.location)).toBeInTheDocument()
+      expect(screen.getByText(MOCKED_JOB.description)).toBeInTheDocument()
+      expect(screen.getByText(MOCKED_JOB.level)).toBeInTheDocument()
+      expect(screen.getByText(MOCKED_JOB.type)).toBeInTheDocument()
     })
 
     expect(screen.queryByTestId('skeleton')).not.toBeInTheDocument()
     expect(screen.queryByTestId('alert')).not.toBeInTheDocument()
+  })
+
+  it('should be able to render ApplyToJobForm if user is authenticated and is a candidate', async () => {
+    currentUseParamsValue = { job_id: MOCKED_JOB.id }
+    currentUseJobDetailsReturn = {
+      job: MOCKED_JOB,
+      isError: false,
+      isLoading: false,
+    }
+    currentUseSessionReturn = {
+      data: { user: { role: 'CANDIDATE' } },
+      status: 'authenticated',
+    }
+
+    render(
+      <QueryClientProvider client={queryClient}>
+        <JobDetails />
+      </QueryClientProvider>,
+    )
+
+    await waitFor(() => {
+      expect(screen.getByTestId('apply-to-job-form')).toBeInTheDocument()
+      expect(screen.getByText(/envie sua candiatura/i)).toBeInTheDocument()
+      expect(
+        screen.queryByText(/você precisa estar logado com um candidato/i),
+      ).not.toBeInTheDocument()
+    })
   })
 })

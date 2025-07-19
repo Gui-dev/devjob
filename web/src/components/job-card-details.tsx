@@ -21,7 +21,6 @@ export const JobCardDetails = ({ job }: IJobCardDetailsProps) => {
   const { data, status } = useSession()
   const user = data?.user
   const canApply = status === 'authenticated' && user?.role === 'CANDIDATE'
-  console.log('SESSION: ', canApply)
 
   return (
     <>
