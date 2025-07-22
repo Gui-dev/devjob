@@ -276,4 +276,39 @@ describe('<JobDetailsPage />', () => {
 
     screen.debug()
   })
+
+  it('should not be able to render ApplyToJobForm and show login message if user is authenticated but is not a candidate', async () => {
+    currentUseParamsValue = { job_id: MOCKED_JOB.id }
+    currentUseJobDetailsReturn = {
+      job: MOCKED_JOB,
+      isError: false,
+      isLoading: false,
+    }
+    currentUseSessionReturn = {
+      data: { user: { role: 'RECRUITER' } },
+      status: 'authenticated',
+    }
+
+    render(
+      <QueryClientProvider client={queryClient}>
+        <JobDetails />
+      </QueryClientProvider>,
+    )
+
+    await waitFor(() => {
+      expect(screen.queryByTestId('apply-to-job-form')).not.toBeInTheDocument()
+      expect(
+        screen.queryByText(/envie sua candiatura/i),
+      ).not.toBeInTheDocument()
+      expect(
+        screen.getByText(/Você precisa estar logado com um/i),
+      ).toBeInTheDocument()
+      expect(screen.getByText(/candidato/i)).toBeInTheDocument()
+      expect(
+        screen.getByText(/para se candidatar a uma vaga\./i),
+      ).toBeInTheDocument()
+    })
+
+    screen.debug()
+  })
 })
