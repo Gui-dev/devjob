@@ -75,12 +75,6 @@ vi.mock('next/link', () => ({
   ),
 }))
 
-// vi.mock('@/components/job-card-details', () => ({
-//   JobCardDetails: ({ job }: IJobCardDetailsProps) => (
-//     <div data-testid="job-card-details">{job.title}</div>
-//   ),
-// }))
-
 vi.mock('@/components/apply-to-job-form', () => ({
   ApplyToJobForm: ({ jobId }: { jobId: string }) => (
     <div data-testid="apply-to-job-form">Envie sua candiatura</div>
