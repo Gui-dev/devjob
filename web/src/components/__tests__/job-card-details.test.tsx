@@ -147,4 +147,27 @@ describe('<JobCardDetails />', () => {
       expect(loginLink).toHaveAttribute('href', '/login')
     })
   })
+
+  it('should be able to render to login message when user is authenticated but is not a candidate', async () => {
+    currentUseSessionReturn = {
+      data: { user: { role: 'RECRUITER' } },
+      status: 'authenticated',
+    }
+
+    renderWithProviders(<JobCardDetails job={MOCKED_JOB} />)
+
+    await waitFor(() => {
+      expect(screen.queryByTestId('apply-to-job-form')).not.toBeInTheDocument()
+      expect(
+        screen.getByText(/você precisa estar logado como um/i),
+      ).toBeInTheDocument()
+      expect(screen.getByText(/candidato/i)).toBeInTheDocument()
+      expect(
+        screen.getByText(/para se candidatar a uma vaga\./i),
+      ).toBeInTheDocument()
+      const loginLink = screen.getByRole('link', { name: /faça login/i })
+      expect(loginLink).toBeInTheDocument()
+      expect(loginLink).toHaveAttribute('href', '/login')
+    })
+  })
 })
