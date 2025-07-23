@@ -230,7 +230,7 @@ describe('<JobDetailsPage />', () => {
       expect(screen.getByTestId('apply-to-job-form')).toBeInTheDocument()
       expect(screen.getByText(/envie sua candiatura/i)).toBeInTheDocument()
       expect(
-        screen.queryByText(/você precisa estar logado com um candidato/i),
+        screen.queryByText(/você precisa estar logado como um candidato/i),
       ).not.toBeInTheDocument()
     })
   })
@@ -259,7 +259,7 @@ describe('<JobDetailsPage />', () => {
         screen.queryByText(/envie sua candiatura/i),
       ).not.toBeInTheDocument()
       expect(
-        screen.getByText(/Você precisa estar logado com um/i),
+        screen.getByText(/Você precisa estar logado como um/i),
       ).toBeInTheDocument()
       expect(screen.getByText(/candidato/i)).toBeInTheDocument()
       expect(
@@ -294,7 +294,7 @@ describe('<JobDetailsPage />', () => {
         screen.queryByText(/envie sua candiatura/i),
       ).not.toBeInTheDocument()
       expect(
-        screen.getByText(/Você precisa estar logado com um/i),
+        screen.getByText(/Você precisa estar logado como um/i),
       ).toBeInTheDocument()
       expect(screen.getByText(/candidato/i)).toBeInTheDocument()
       expect(

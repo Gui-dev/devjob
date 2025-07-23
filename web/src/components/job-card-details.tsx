@@ -83,7 +83,7 @@ export const JobCardDetails = ({ job }: IJobCardDetailsProps) => {
           {canApply && <ApplyToJobForm jobId={job.id} />}
           {!canApply && (
             <p className="text-sm text-muted-foreground mt-4 text-center">
-              Você precisa estar logado com um <strong>candidato</strong> para
+              Você precisa estar logado como um <strong>candidato</strong> para
               se candidatar a uma vaga.{' '}
               <Link
                 href="/login"

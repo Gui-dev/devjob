@@ -127,4 +127,24 @@ describe('<JobCardDetails />', () => {
       ).not.toBeInTheDocument()
     })
   })
+
+  it('should be able to render to login message when user is unauthenticated', async () => {
+    currentUseSessionReturn = { data: null, status: 'unauthenticated' }
+
+    renderWithProviders(<JobCardDetails job={MOCKED_JOB} />)
+
+    await waitFor(() => {
+      expect(screen.queryByTestId('apply-to-job-form')).not.toBeInTheDocument()
+      expect(
+        screen.getByText(/você precisa estar logado como um/i),
+      ).toBeInTheDocument()
+      expect(screen.getByText(/candidato/i)).toBeInTheDocument()
+      expect(
+        screen.getByText(/para se candidatar a uma vaga\./i),
+      ).toBeInTheDocument()
+      const loginLink = screen.getByRole('link', { name: /faça login/i })
+      expect(loginLink).toBeInTheDocument()
+      expect(loginLink).toHaveAttribute('href', '/login')
+    })
+  })
 })
