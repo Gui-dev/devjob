@@ -9,7 +9,6 @@ import JobDetails from '@/app/(main)/job/[job_id]/details/page'
 import * as useJobDetailsModule from '@/hooks/use-job-details'
 import type { IJobProps } from '@/components/job-card'
 import type { IJobCardDetailsProps } from '@/components/job-card-details'
-import { AuthProvider } from '@/components/auth-provider'
 
 let currentSearchParams = new URLSearchParams('')
 let currentUseParamsValue: { [key: string]: string | string[] } = {}

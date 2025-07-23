@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import { render, screen } from '@testing-library/react'
+import { render, screen, waitFor } from '@testing-library/react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 
 import { JobCardDetails } from './../job-card-details'
@@ -25,7 +25,7 @@ let currentUseSessionReturn: {
 
 vi.mock('next-auth/react', () => ({
   useSession: vi.fn(() => currentUseSessionReturn),
-  getSession: vi.fn(() => Promise.resolve(currentUseSessionReturn.data)),
+  getSession: vi.fn(() => currentUseSessionReturn.data),
 }))
 
 vi.mock('next/link', () => ({
@@ -53,7 +53,7 @@ vi.mock('./../ui/badge', () => ({
   ),
 }))
 
-vi.mock('./apply-to-job-form', () => ({
+vi.mock('./../apply-to-job-form', () => ({
   ApplyToJobForm: ({ jobId }: { jobId: string }) => (
     <div data-testid="apply-to-job-form">Apply for {jobId}</div>
   ),
@@ -109,5 +109,22 @@ describe('<JobCardDetails />', () => {
     expect(backLink).toBeInTheDocument()
     expect(backLink).toHaveAttribute('href', '/')
     expect(screen.getByTestId('icon-arrow-left')).toBeInTheDocument()
+  })
+
+  it('should be able to render ApplyToJobForm when user is authenticated as a candidate', async () => {
+    currentUseSessionReturn = {
+      data: { user: { role: 'CANDIDATE' } },
+      status: 'authenticated',
+    }
+
+    renderWithProviders(<JobCardDetails job={MOCKED_JOB} />)
+
+    await waitFor(() => {
+      expect(screen.getByTestId('apply-to-job-form')).toBeInTheDocument()
+      expect(screen.getByText(`Apply for ${MOCKED_JOB.id}`)).toBeInTheDocument()
+      expect(
+        screen.queryByText(/você precisa estar logado com um candidato/i),
+      ).not.toBeInTheDocument()
+    })
   })
 })
