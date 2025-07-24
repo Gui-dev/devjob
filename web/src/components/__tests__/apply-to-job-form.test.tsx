@@ -1,6 +1,6 @@
-import type { ReactNode } from 'react'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { render, screen, waitFor } from '@testing-library/react'
+import { userEvent } from '@testing-library/user-event'
 
 import { ApplyToJobForm } from './../apply-to-job-form'
 import * as useApplyToJobModule from '@/hooks/use-apply-to-job'
@@ -15,9 +15,15 @@ vi.mock('@/hooks/use-apply-to-job', () => ({
   })),
 }))
 
-vi.mock('lucide-react', () => ({
-  LoaderCircle: () => <svg data-testid="icon-loader-circle" />,
-}))
+vi.mock('lucide-react', async () => {
+  const actual = (await vi.importActual(
+    'lucide-react',
+  )) as typeof import('lucide-react')
+  return {
+    ...actual,
+    LoaderCircle: () => <svg data-testid="icon-loader-circle" />,
+  }
+})
 
 vi.mock('@lib/utils', () => ({
   cn: vi.fn((...args: string[]) => args.filter(Boolean).join(' ')),
@@ -52,90 +58,14 @@ vi.mock('./../ui/label', () => ({
   )),
 }))
 
-let dialogIsOpen = false
-let dialogOnOpenChange: ((open: boolean) => void) | undefined
-
-vi.mock('./../ui/dialog', () => {
-  const actual = vi.importActual(
-    './../ui/dialog',
-  ) as typeof import('./../ui/dialog')
-
-  return {
-    // biome-ignore lint/suspicious: test
-    Dialog: ({ children, onOpenChange, open, ...props }: any) => {
-      dialogOnOpenChange = onOpenChange
-      dialogIsOpen = typeof open === 'boolean' ? open : dialogIsOpen
-      return (
-        <div data-testid="dialog" {...props}>
-          {children}
-        </div>
-      )
-    },
-    // biome-ignore lint/suspicious: test
-    DialogTrigger: ({ children, asChild, ...props }: any) => {
-      const Child = asChild ? children : <button {...props}>{children}</button>
-      return (
-        <div
-          data-testid="dialog-trigger"
-          onClick={() => {
-            dialogIsOpen = true
-            dialogOnOpenChange?.(true)
-          }}
-          {...props}
-        >
-          {Child}
-        </div>
-      )
-    },
-    // biome-ignore lint/suspicious: test
-    DialogContent: ({ children, ...props }: any) => {
-      return dialogIsOpen ? (
-        <div data-testid="dialog-content" {...props}>
-          {children}
-        </div>
-      ) : null
-    },
-    DialogHeader: ({ children }: { children: ReactNode }) => {
-      return <div data-testid="dialog-header">{children}</div>
-    },
-    DialogTitle: ({ children }: { children: ReactNode }) => {
-      return <h2 data-testid="dialog-title">{children}</h2>
-    },
-
-    DialogDescription: ({ children }: { children: ReactNode }) => {
-      return <p data-testid="dialog-description">{children}</p>
-    },
-
-    DialogFooter: ({ children }: { children: ReactNode }) => {
-      return <div data-testid="dialog-footer">{children}</div>
-    },
-    // biome-ignore lint/suspicious: test
-    DialogClose: ({ children, asChild, ...props }: any) => {
-      const Child = asChild ? children : <button {...props}>{children}</button>
-      return (
-        <div
-          data-testid="dialog-close"
-          onClick={() => {
-            dialogIsOpen = false
-            dialogOnOpenChange?.(false)
-          }}
-          {...props}
-        >
-          {Child}
-        </div>
-      )
-    },
-  }
-})
-
 const MOCKED_JOB_ID = 'job-id-123'
 
 describe('<ApplyToJobForm />', () => {
+  const user = userEvent.setup()
+
   beforeEach(() => {
     mockMutate.mockReset()
     mockIsPending = false
-    dialogIsOpen = false
-    dialogOnOpenChange = undefined
 
     vi.mocked(useApplyToJobModule.useApplyToJob).mockImplementation(() => ({
       mutate: mockMutate,
@@ -148,5 +78,31 @@ describe('<ApplyToJobForm />', () => {
 
     const triggerButton = screen.getByRole('button', { name: /me candidatar/i })
     expect(triggerButton).toBeInTheDocument()
+  })
+
+  it('should be able to open dialog when "Me candidatar" button is clicked', async () => {
+    render(<ApplyToJobForm jobId={MOCKED_JOB_ID} />)
+
+    const triggerButton = screen.getByRole('button', { name: /me candidatar/i })
+    await user.click(triggerButton)
+
+    screen.debug()
+
+    await waitFor(() => {
+      expect(screen.getByText(/envie sua candiatura/i)).toBeInTheDocument() // Adicione mais asserções aqui
+      expect(
+        screen.getByText(
+          /mostre seu interesse pela vaga e compartilhe seus links profissionais/i,
+        ),
+      ).toBeInTheDocument()
+      expect(screen.getByText(/github/i)).toBeInTheDocument()
+      expect(screen.getByText(/linkedin/i)).toBeInTheDocument()
+      expect(
+        screen.getByRole('button', { name: /enviar candidatura/i }),
+      ).toBeInTheDocument()
+      expect(
+        screen.getByRole('button', { name: /cancelar/i }),
+      ).toBeInTheDocument()
+    })
   })
 })

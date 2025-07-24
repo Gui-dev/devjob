@@ -4,7 +4,7 @@ import { userEvent } from '@testing-library/user-event'
 import { useRouter } from 'next/navigation'
 import { signIn } from 'next-auth/react'
 
-import LoginPage from './../page'
+import LoginPage from '@/app/(auth)/login/page'
 import { AuthProvider } from '@/components/auth-provider'
 
 vi.mock('next/navigation', () => ({
