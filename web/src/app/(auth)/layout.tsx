@@ -1,7 +1,9 @@
+import { IsUserAuthenticated } from '@/components/is-user-authenticated'
+
 export default function AuthLayout({
   children,
 }: Readonly<{
   children: React.ReactNode
 }>) {
-  return <>{children}</>
+  return <IsUserAuthenticated>{children}</IsUserAuthenticated>
 }

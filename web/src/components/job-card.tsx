@@ -25,7 +25,12 @@ interface IJobCardProps {
 
 export const JobCard = ({ job }: IJobCardProps) => {
   return (
-    <Link href={`/job/${job.id}/details`} className="group">
+    <Link
+      href={`/job/${job.id}/details`}
+      className="group"
+      title="Ver detalhes"
+      data-testid="job-card"
+    >
       <Card className="transition-all duration-200 group-hover:border-primary group-hover:shadow-lg">
         <CardHeader>
           <CardTitle className="text-lg font-semibold group-hover:text-primary">

@@ -230,8 +230,6 @@ describe('<ApplyToJobForm />', () => {
     })
     await user.click(submitButton)
 
-    screen.debug()
-
     await waitFor(() => {
       expect(
         screen.getByText(/a mensagem deve ter no minimo 10 caracteres/i),
