@@ -246,4 +246,36 @@ describe('<ApplyToJobForm />', () => {
 
     expect(mockMutate).not.toHaveBeenCalled()
   })
+
+  it('should be able to show a loading indicator on submit button when submitting', async () => {
+    mockIsPending = true
+    vi.mocked(useApplyToJobModule.useApplyToJob).mockImplementation(() => ({
+      mutate: mockMutate,
+      isPending: mockIsPending,
+    }))
+
+    render(<ApplyToJobForm jobId={MOCKED_JOB_ID} />)
+
+    const triggerButton = screen.getByRole('button', { name: /me candidatar/i })
+    await user.click(triggerButton)
+
+    await waitFor(() => {
+      expect(screen.getByText(/envie sua candiatura/i)).toBeInTheDocument()
+      expect(
+        screen.getByText(
+          /mostre seu interesse pela vaga e compartilhe seus links profissionais/i,
+        ),
+      ).toBeInTheDocument()
+      expect(screen.getByText(/github/i)).toBeInTheDocument()
+      expect(screen.getByText(/linkedin/i)).toBeInTheDocument()
+      expect(
+        screen.queryByRole('button', { name: /enviar candidatura/i }),
+      ).not.toBeInTheDocument()
+      expect(
+        screen.getByRole('button', { name: /cancelar/i }),
+      ).toBeInTheDocument()
+    })
+
+    expect(screen.getByTestId('icon-loader-circle')).toBeInTheDocument()
+  })
 })
