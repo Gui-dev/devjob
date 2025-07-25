@@ -86,7 +86,29 @@ describe('<ApplyToJobForm />', () => {
     const triggerButton = screen.getByRole('button', { name: /me candidatar/i })
     await user.click(triggerButton)
 
-    screen.debug()
+    await waitFor(() => {
+      expect(screen.getByText(/envie sua candiatura/i)).toBeInTheDocument() // Adicione mais asserções aqui
+      expect(
+        screen.getByText(
+          /mostre seu interesse pela vaga e compartilhe seus links profissionais/i,
+        ),
+      ).toBeInTheDocument()
+      expect(screen.getByText(/github/i)).toBeInTheDocument()
+      expect(screen.getByText(/linkedin/i)).toBeInTheDocument()
+      expect(
+        screen.getByRole('button', { name: /enviar candidatura/i }),
+      ).toBeInTheDocument()
+      expect(
+        screen.getByRole('button', { name: /cancelar/i }),
+      ).toBeInTheDocument()
+    })
+  })
+
+  it('should be able to close dialog when "Cancelar" button is clicked', async () => {
+    render(<ApplyToJobForm jobId={MOCKED_JOB_ID} />)
+
+    const triggerButton = screen.getByRole('button', { name: /me candidatar/i })
+    await user.click(triggerButton)
 
     await waitFor(() => {
       expect(screen.getByText(/envie sua candiatura/i)).toBeInTheDocument() // Adicione mais asserções aqui
@@ -103,6 +125,28 @@ describe('<ApplyToJobForm />', () => {
       expect(
         screen.getByRole('button', { name: /cancelar/i }),
       ).toBeInTheDocument()
+    })
+
+    const cancelButton = screen.getByRole('button', { name: /cancelar/i })
+    await user.click(cancelButton)
+
+    await waitFor(() => {
+      expect(
+        screen.queryByText(/envie sua candiatura/i),
+      ).not.toBeInTheDocument() // Adicione mais asserções aqui
+      expect(
+        screen.queryByText(
+          /mostre seu interesse pela vaga e compartilhe seus links profissionais/i,
+        ),
+      ).not.toBeInTheDocument()
+      expect(screen.queryByText(/github/i)).not.toBeInTheDocument()
+      expect(screen.queryByText(/linkedin/i)).not.toBeInTheDocument()
+      expect(
+        screen.queryByRole('button', { name: /enviar candidatura/i }),
+      ).not.toBeInTheDocument()
+      expect(
+        screen.queryByRole('button', { name: /cancelar/i }),
+      ).not.toBeInTheDocument()
     })
   })
 })
