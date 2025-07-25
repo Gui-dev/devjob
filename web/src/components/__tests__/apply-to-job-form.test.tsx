@@ -149,4 +149,56 @@ describe('<ApplyToJobForm />', () => {
       ).not.toBeInTheDocument()
     })
   })
+
+  it('should be able to submit the form with valid data and close the dialog', async () => {
+    render(<ApplyToJobForm jobId={MOCKED_JOB_ID} />)
+
+    const triggerButton = screen.getByRole('button', { name: /me candidatar/i })
+    await user.click(triggerButton)
+
+    await waitFor(() => {
+      expect(screen.getByText(/envie sua candiatura/i)).toBeInTheDocument() // Adicione mais asserções aqui
+      expect(
+        screen.getByText(
+          /mostre seu interesse pela vaga e compartilhe seus links profissionais/i,
+        ),
+      ).toBeInTheDocument()
+      expect(screen.getByText(/github/i)).toBeInTheDocument()
+      expect(screen.getByText(/linkedin/i)).toBeInTheDocument()
+      expect(
+        screen.getByRole('button', { name: /enviar candidatura/i }),
+      ).toBeInTheDocument()
+      expect(
+        screen.getByRole('button', { name: /cancelar/i }),
+      ).toBeInTheDocument()
+    })
+
+    const messageInput = screen.getByPlaceholderText(
+      /por que essa vaga é ideal para você ?/i,
+    )
+    const githubInput = screen.getByPlaceholderText(
+      /https\:\/\/github\.com\/seu-perfil/i,
+    )
+    const linkedinInput = screen.getByPlaceholderText(
+      /https\:\/\/linkedin.com\/in\/seu-perfil/i,
+    )
+
+    await user.type(messageInput, 'Fake Mensagem personalizada')
+    await user.type(githubInput, 'https://github.com/fake_username')
+    await user.type(linkedinInput, 'https://linkedin.com/in/fake_username')
+
+    const submitButton = screen.getByRole('button', {
+      name: /enviar candidatura/i,
+    })
+    await user.click(submitButton)
+
+    await waitFor(() => {
+      expect(mockMutate).toHaveBeenCalledTimes(1)
+      expect(mockMutate).toHaveBeenCalledWith({
+        message: 'Fake Mensagem personalizada',
+        githubUrl: 'https://github.com/fake_username',
+        linkedinUrl: 'https://linkedin.com/in/fake_username',
+      })
+    })
+  })
 })
