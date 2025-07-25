@@ -201,4 +201,49 @@ describe('<ApplyToJobForm />', () => {
       })
     })
   })
+
+  it('should be able to show validation errors when submitting with empty required fields', async () => {
+    render(<ApplyToJobForm jobId={MOCKED_JOB_ID} />)
+
+    const triggerButton = screen.getByRole('button', { name: /me candidatar/i })
+    await user.click(triggerButton)
+
+    await waitFor(() => {
+      expect(screen.getByText(/envie sua candiatura/i)).toBeInTheDocument()
+      expect(
+        screen.getByText(
+          /mostre seu interesse pela vaga e compartilhe seus links profissionais/i,
+        ),
+      ).toBeInTheDocument()
+      expect(screen.getByText(/github/i)).toBeInTheDocument()
+      expect(screen.getByText(/linkedin/i)).toBeInTheDocument()
+      expect(
+        screen.getByRole('button', { name: /enviar candidatura/i }),
+      ).toBeInTheDocument()
+      expect(
+        screen.getByRole('button', { name: /cancelar/i }),
+      ).toBeInTheDocument()
+    })
+
+    const submitButton = screen.getByRole('button', {
+      name: /enviar candidatura/i,
+    })
+    await user.click(submitButton)
+
+    screen.debug()
+
+    await waitFor(() => {
+      expect(
+        screen.getByText(/a mensagem deve ter no minimo 10 caracteres/i),
+      ).toBeInTheDocument()
+      expect(
+        screen.getByText(/informe uma Url do github válida/i),
+      ).toBeInTheDocument()
+      expect(
+        screen.getByText(/informe uma Url do linkedin válida/i),
+      ).toBeInTheDocument()
+    })
+
+    expect(mockMutate).not.toHaveBeenCalled()
+  })
 })
