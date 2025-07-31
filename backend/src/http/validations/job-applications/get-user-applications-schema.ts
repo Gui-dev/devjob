@@ -14,6 +14,7 @@ export const getUserApplicationsResponseSchema = z.object({
       message: z.string().nullable(),
       githubUrl: z.string().url().nullable(),
       linkedinUrl: z.string().url().nullable(),
+      status: z.enum(['PENDING', 'ACCEPTED', 'REJECTED']),
       createdAt: z.date(),
       job: z.object({
         id: z.string().cuid(),

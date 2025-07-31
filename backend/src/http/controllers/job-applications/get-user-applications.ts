@@ -8,14 +8,18 @@ import {
   getUserApplicationsQuerySchema,
   getUserApplicationsResponseSchema,
 } from '@/http/validations/job-applications/get-user-applications-schema'
+import { authorize } from '@/middlewares/authorize'
 
 export const getUserApplicationsRoute = (app: FastifyInstance) => {
   app.withTypeProvider<ZodTypeProvider>().get(
     '/jobs/me/applications',
     {
-      preHandler: [authenticate],
+      preHandler: [
+        authenticate,
+        authorize(['CANDIDATE', 'RECRUITER', 'ADMIN']),
+      ],
       schema: {
-        summary: 'Visualizar aplicações do usuário',
+        summary: 'Visualizar aplicacoes do usuario',
         tags: ['Job Applications'],
         querystring: getUserApplicationsQuerySchema,
         response: {
