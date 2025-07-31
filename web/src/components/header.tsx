@@ -17,6 +17,9 @@ import { ModeToggle } from './toggle-theme'
 
 export const Header = () => {
   const { data: session } = useSession()
+  const role = session?.user?.role.toLowerCase()
+
+  console.log('ROLE: ', role)
 
   return (
     <header className="flex items-center justify-between px-6 py-4 shadow-md">
@@ -39,7 +42,7 @@ export const Header = () => {
               <DropdownMenuItem>
                 <div className="flex items-center justify-around gap-2">
                   <User className="size-4" />
-                  <Link href="/profile">Profile</Link>
+                  <Link href={`/dashboard/${role}`}>Profile</Link>
                 </div>
               </DropdownMenuItem>
               <DropdownMenuItem>
