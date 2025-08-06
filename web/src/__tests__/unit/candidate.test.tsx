@@ -6,7 +6,10 @@ import * as nextAuthReact from 'next-auth/react'
 
 import UserProfile from '@/app/(main)/(private)/dashboard/candidate/page'
 import { useGetStats } from '@/hooks/use-get-stats'
-import { useGetJobApplications } from '@/hooks/use-get-job-applications'
+import {
+  type IGetJobApplicationsResponse,
+  useGetJobApplications,
+} from '@/hooks/use-get-job-applications'
 
 vi.mock('@/hooks/use-get-stats')
 vi.mock('@/hooks/use-get-job-applications')
@@ -90,22 +93,24 @@ const WrapperUserProfile = () => (
 )
 
 // --- Dados Mockados ---
-const MOCK_STATS_DATA_RAW = {
-  // O que getStats retornaria
-  candidateStats: {
-    totalApplications: 10,
-    acceptedApplications: 5,
-    pendingApplications: 3,
-    rejectedApplications: 2,
-  },
-  recruiterStats: null,
-  stats: null,
+const MOCK_STATS_DATA = {
+  totalApplications: 10,
+  acceptedApplications: 5,
+  pendingApplications: 3,
+  rejectedApplications: 2,
 }
 
-const MOCK_JOB_APPLICATIONS_DATA = {
+const MOCK_JOB_APPLICATIONS_DATA: IGetJobApplicationsResponse = {
   jobApplications: [
     {
       id: 'app-1',
+      jobId: 'job-1',
+      userId: 'user-1',
+      status: 'ACCEPTED',
+      message: 'Olá, me interessei pela vaga...',
+      githubUrl: 'https://github.com/teste',
+      linkedinUrl: 'https://linkedin.com/in/teste',
+      createdAt: new Date(),
       job: {
         id: 'job-1',
         title: 'Desenvolvedor Frontend',
@@ -116,12 +121,6 @@ const MOCK_JOB_APPLICATIONS_DATA = {
         createdAt: new Date(),
         recruiterId: 'rec-1',
       },
-      status: 'ACCEPTED',
-      message: 'Olá, me interessei pela vaga...',
-      githubUrl: 'https://github.com/teste',
-      linkedinUrl: 'https://linkedin.com/in/teste',
-      userId: 'user-1',
-      createdAt: new Date(),
     },
   ],
   meta: { total: 1, page: 1, pages: 1 },
@@ -154,5 +153,41 @@ describe('Dashboard candidate profile', () => {
     expect(
       screen.getByTestId('skeleton-job-application-resume'),
     ).toBeInTheDocument()
+  })
+
+  it('should be able to render stats and job applications when data is available', async () => {
+    vi.mocked(useGetStats).mockReturnValue({
+      stats: MOCK_STATS_DATA,
+      isPending: false,
+    })
+
+    vi.mocked(useGetJobApplications).mockReturnValue({
+      data: MOCK_JOB_APPLICATIONS_DATA,
+      isPending: false,
+    })
+
+    render(<WrapperUserProfile />)
+
+    await waitFor(() => {
+      expect(screen.queryByTestId('skeleton-stats')).not.toBeInTheDocument()
+      expect(
+        screen.queryByTestId('skeleton-job-application-resume'),
+      ).not.toBeInTheDocument()
+
+      expect(screen.getByText(/vagas aplicadas/i)).toBeInTheDocument()
+      expect(screen.getByText('10')).toBeInTheDocument()
+      expect(screen.getByText(/vagas aceitas/i)).toBeInTheDocument()
+      expect(screen.getByText('5')).toBeInTheDocument()
+      expect(screen.getByText(/vagas pendentes/i)).toBeInTheDocument()
+      expect(screen.getByText('3')).toBeInTheDocument()
+      expect(screen.getByText(/vagas rejeitadas/i)).toBeInTheDocument()
+      expect(screen.getByText('2')).toBeInTheDocument()
+
+      expect(screen.getByText(/desenvolvedor frontend/i)).toBeInTheDocument()
+      expect(screen.getByText(/google - são paulo/i)).toBeInTheDocument()
+      expect(screen.getByText(/ACCEPTED/i)).toBeInTheDocument()
+      expect(screen.getByText(/descrição da vaga/i)).toBeInTheDocument()
+      expect(screen.getByText(/Ver mais: app-1/i)).toBeInTheDocument()
+    })
   })
 })

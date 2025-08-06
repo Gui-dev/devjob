@@ -11,6 +11,7 @@ export type JobApplication = {
   linkedinUrl: string
   status: 'PENDING' | 'ACCEPTED' | 'REJECTED'
   createdAt: Date
+
   job: {
     id: string
     recruiterId: string
@@ -23,7 +24,7 @@ export type JobApplication = {
   }
 }
 
-interface IGetJobApplicationsResponse {
+export interface IGetJobApplicationsResponse {
   jobApplications: JobApplication[]
   meta: {
     total: number
