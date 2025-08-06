@@ -49,7 +49,7 @@ const UserProfile = () => {
         {isJobApplicationsPending && <SkeletonJobApplicationResume />}
 
         {data && data.jobApplications.length === 0 && (
-          <p className="text-muted-foreground">Voce nao possui candidaturas</p>
+          <p className="text-muted-foreground">Você nao possui candidaturas</p>
         )}
 
         {data && data.jobApplications.length > 0 && (

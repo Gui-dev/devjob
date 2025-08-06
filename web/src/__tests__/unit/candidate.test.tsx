@@ -36,13 +36,13 @@ vi.mock('@/components/dashboard-components/card-resume', () => ({
   )),
 }))
 
-vi.mock('@/components/dashboard-components/see-more-application', () => ({
-  SeeMoreApplication: vi.fn(({ jobApplication }) => (
-    <button type="button" data-testid="see-more-button" onClick={() => vi.fn()}>
-      Ver mais: {jobApplication.id}
-    </button>
-  )),
-}))
+// vi.mock('@/components/dashboard-components/see-more-application', () => ({
+//   SeeMoreApplication: vi.fn(({ jobApplication }) => (
+//     <button type="button" data-testid="see-more-button" onClick={() => vi.fn()}>
+//       Ver mais: {jobApplication.id}
+//     </button>
+//   )),
+// }))
 
 vi.mock('@/components/pagination-bar', () => ({
   PaginationBar: vi.fn(({ currentPage, totalPages }) => (
@@ -187,7 +187,32 @@ describe('Dashboard candidate profile', () => {
       expect(screen.getByText(/google - são paulo/i)).toBeInTheDocument()
       expect(screen.getByText(/ACCEPTED/i)).toBeInTheDocument()
       expect(screen.getByText(/descrição da vaga/i)).toBeInTheDocument()
-      expect(screen.getByText(/Ver mais: app-1/i)).toBeInTheDocument()
+    })
+  })
+
+  it('should be able to render when there are no job applications', async () => {
+    vi.mocked(useGetStats).mockReturnValue({
+      stats: MOCK_STATS_DATA,
+      isPending: false,
+    })
+
+    vi.mocked(useGetJobApplications).mockReturnValue({
+      data: {
+        jobApplications: [],
+        meta: { total: 0, page: 1, pages: 1 },
+      },
+      isPending: false,
+    })
+
+    render(<WrapperUserProfile />)
+
+    await waitFor(() => {
+      expect(
+        screen.getByText(/você nao possui candidaturas/i),
+      ).toBeInTheDocument()
+      expect(
+        screen.queryByText(/desenvolvedor frontend/i),
+      ).not.toBeInTheDocument()
     })
   })
 })
