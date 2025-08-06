@@ -1,4 +1,4 @@
-import { useSuspenseQuery } from '@tanstack/react-query'
+import { useQuery } from '@tanstack/react-query'
 
 import { getJobApplications } from '@/services/get-job-applications'
 
@@ -33,12 +33,13 @@ interface IGetJobApplicationsResponse {
 }
 
 export const useGetJobApplications = () => {
-  const { data } = useSuspenseQuery<IGetJobApplicationsResponse>({
+  const { data, isPending } = useQuery<IGetJobApplicationsResponse>({
     queryKey: ['job-applications'],
-    queryFn: () => getJobApplications(),
+    queryFn: async () => await getJobApplications(),
   })
 
   return {
     data,
+    isPending,
   }
 }

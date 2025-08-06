@@ -11,8 +11,6 @@ export const handlers = [
   http.post('http://localhost:3333/users/register', async ({ request }) => {
     const data = (await request.json()) as RegisterSchemaData
 
-    console.log('DATA: ', data)
-
     if (data.email === 'emailexists@email.com') {
       return HttpResponse.json(
         { error: 'Email already exists' },
@@ -20,6 +18,21 @@ export const handlers = [
       )
     }
     return HttpResponse.json({ userId: 'user-id' }, { status: 201 })
+  }),
+
+  http.get('http://localhost:3333/me/stats', () => {
+    return HttpResponse.json({})
+  }),
+
+  http.get('http://localhost:3333/jobs/me/applications', () => {
+    return HttpResponse.json({
+      jobApplications: [],
+      meta: {
+        total: 0,
+        page: 1,
+        pages: 1,
+      },
+    })
   }),
 
   http.get('/api/auth/session', () => {

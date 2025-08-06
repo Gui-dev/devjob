@@ -1,4 +1,4 @@
-import { useSuspenseQuery } from '@tanstack/react-query'
+import { useQuery } from '@tanstack/react-query'
 import { useSession } from 'next-auth/react'
 
 import { getStats } from '@/services/get-stats'
@@ -17,12 +17,13 @@ export const useGetStats = () => {
     endpoint = '/stats'
   }
 
-  const { data } = useSuspenseQuery({
+  const { data, isPending } = useQuery({
     queryKey: ['stats', role],
-    queryFn: () => getStats(endpoint),
+    queryFn: async () => await getStats(endpoint),
   })
 
   return {
     stats: data?.candidateStats || data?.recruiterStats || data?.stats,
+    isPending,
   }
 }

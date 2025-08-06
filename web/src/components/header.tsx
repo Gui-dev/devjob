@@ -19,8 +19,6 @@ export const Header = () => {
   const { data: session } = useSession()
   const role = session?.user?.role.toLowerCase()
 
-  console.log('ROLE: ', role)
-
   return (
     <header className="flex items-center justify-between px-6 py-4 shadow-md">
       <Link href="/">
