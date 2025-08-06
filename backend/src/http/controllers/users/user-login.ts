@@ -6,13 +6,14 @@ import {
 } from '../../validations/users/user-login-schema'
 import { UserRepository } from '../../../repositories/user-repository'
 import { UserLoginUseCase } from '../../../use-cases/users/user-login'
+import { env } from '@/lib/env'
 
 export const userLoginRoute = async (app: FastifyInstance) => {
   app.withTypeProvider<ZodTypeProvider>().post(
     '/users/login',
     {
       schema: {
-        summary: 'Logar usuário',
+        summary: 'Logar usuario',
         tags: ['users'],
         body: userLoginSchema,
         response: {
@@ -35,7 +36,7 @@ export const userLoginRoute = async (app: FastifyInstance) => {
         .setCookie('refreshToken', refreshToken, {
           path: '/',
           httpOnly: true,
-          secure: true,
+          secure: env.NODE_ENV === 'production',
           sameSite: true,
         })
         .status(200)

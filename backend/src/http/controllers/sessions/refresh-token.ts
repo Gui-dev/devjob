@@ -1,3 +1,4 @@
+import { env } from '@/lib/env'
 import type { FastifyInstance } from 'fastify'
 
 export const refreshTokenRoute = async (app: FastifyInstance) => {
@@ -18,7 +19,7 @@ export const refreshTokenRoute = async (app: FastifyInstance) => {
       .setCookie('refreshToken', refreshToken, {
         path: '/',
         httpOnly: true,
-        secure: true,
+        secure: env.NODE_ENV === 'production',
         sameSite: true,
       })
       .status(200)
