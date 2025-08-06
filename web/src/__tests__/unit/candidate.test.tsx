@@ -215,4 +215,31 @@ describe('Dashboard candidate profile', () => {
       ).not.toBeInTheDocument()
     })
   })
+
+  it('should be able to see more application', async () => {
+    vi.mocked(useGetStats).mockReturnValue({
+      stats: MOCK_STATS_DATA,
+      isPending: false,
+    })
+
+    vi.mocked(useGetJobApplications).mockReturnValue({
+      data: MOCK_JOB_APPLICATIONS_DATA,
+      isPending: false,
+    })
+
+    render(<WrapperUserProfile />)
+
+    await waitFor(() => {
+      expect(
+        screen.getByRole('button', { name: /ver mais/i }),
+      ).toBeInTheDocument()
+    })
+
+    const seeMore = screen.getByRole('button', { name: /ver mais/i })
+    await user.click(seeMore)
+
+    await waitFor(() => {
+      expect(screen.getByRole('button', { name: /close/i })).toBeInTheDocument()
+    })
+  })
 })
