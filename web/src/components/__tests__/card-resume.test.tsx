@@ -51,4 +51,17 @@ describe('<CardResume />', () => {
     expect(cardTitle).toHaveClass('capitalize')
     expect(cardTitle).toHaveClass('text-center')
   })
+
+  it('should apply the correct class names to the main Card', () => {
+    const testTitle = 'Test Title'
+    const testResume = 42
+
+    render(<CardResume title={testTitle} resume={testResume} />)
+
+    const card = screen.getByTestId('card')
+    expect(card).toHaveClass('flex')
+    expect(card).toHaveClass('flex-col')
+    expect(card).toHaveClass('justify-around')
+    expect(card).toHaveClass('text-center')
+  })
 })
