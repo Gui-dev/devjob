@@ -1,0 +1,42 @@
+import { describe, expect, it, vi } from 'vitest'
+import { render, screen } from '@testing-library/react'
+
+import { CardResume } from '../dashboard-components/card-resume'
+
+vi.mock('@/components/ui/card', () => ({
+  Card: vi.fn(({ children, className }) => (
+    <div data-testid="card" className={className}>
+      {children}
+    </div>
+  )),
+  CardHeader: vi.fn(({ children }) => (
+    <div data-testid="card-header">{children}</div>
+  )),
+  CardTitle: vi.fn(({ children, className }) => (
+    <div data-testid="card-title" className={className}>
+      {children}
+    </div>
+  )),
+  CardContent: vi.fn(({ children }) => (
+    <div data-testid="card-content">{children}</div>
+  )),
+}))
+
+describe('<CardResume />', () => {
+  it('should be able to render the title and resume number correctly', async () => {
+    const testTitle = 'Test Title'
+    const testResume = 42
+
+    render(<CardResume title={testTitle} resume={testResume} />)
+
+    expect(screen.getByTestId('card')).toBeInTheDocument()
+
+    const renderedTitle = screen.getByText(testTitle)
+    expect(renderedTitle).toBeInTheDocument()
+    expect(renderedTitle).toHaveAttribute('data-testid', 'card-title')
+
+    const renderedResume = screen.getByText(testResume)
+    expect(renderedResume).toBeInTheDocument()
+    expect(renderedResume).toHaveTextContent(String(testResume))
+  })
+})
