@@ -39,4 +39,16 @@ describe('<CardResume />', () => {
     expect(renderedResume).toBeInTheDocument()
     expect(renderedResume).toHaveTextContent(String(testResume))
   })
+
+  it('should be able to apply the correct class names to CardTitle', async () => {
+    const testTitle = 'Test Title'
+    const testResume = 42
+
+    render(<CardResume title={testTitle} resume={testResume} />)
+
+    const cardTitle = screen.getByTestId('card-title')
+
+    expect(cardTitle).toHaveClass('capitalize')
+    expect(cardTitle).toHaveClass('text-center')
+  })
 })
