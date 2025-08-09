@@ -103,4 +103,28 @@ describe('<SeeMoreApplication />', () => {
       ).not.toBeInTheDocument()
     })
   })
+
+  it('should be able to close the dialog when the ESC key is pressed', async () => {
+    render(<SeeMoreApplication jobApplication={MOCKED_JOB_APPLICATION} />)
+
+    const triggerButton = screen.getByRole('button', { name: /ver mais/i })
+    await user.click(triggerButton)
+
+    expect(
+      screen.getByRole('heading', { name: MOCKED_JOB_APPLICATION.job.title }),
+    ).toBeInTheDocument()
+    expect(
+      screen.getByText(`${MOCKED_JOB_APPLICATION.job.company}`),
+    ).toBeInTheDocument()
+
+    await user.keyboard('{Escape}')
+
+    await waitFor(() => {
+      expect(
+        screen.queryByRole('heading', {
+          name: MOCKED_JOB_APPLICATION.job.title,
+        }),
+      ).not.toBeInTheDocument()
+    })
+  })
 })
