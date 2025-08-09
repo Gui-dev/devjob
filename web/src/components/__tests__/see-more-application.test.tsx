@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import { render, screen } from '@testing-library/react'
+import { render, screen, waitFor } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
 
 import { SeeMoreApplication } from './../dashboard-components/see-more-application'
@@ -77,6 +77,30 @@ describe('<SeeMoreApplication />', () => {
     expect(
       screen.getByText(`${MOCKED_JOB_APPLICATION.job.type}`),
     ).toBeInTheDocument()
-    screen.debug()
+  })
+
+  it('should be able to close the dialog when the close button is clicked', async () => {
+    render(<SeeMoreApplication jobApplication={MOCKED_JOB_APPLICATION} />)
+
+    const triggerButton = screen.getByRole('button', { name: /ver mais/i })
+    await user.click(triggerButton)
+
+    expect(
+      screen.getByRole('heading', { name: MOCKED_JOB_APPLICATION.job.title }),
+    ).toBeInTheDocument()
+    expect(
+      screen.getByText(`${MOCKED_JOB_APPLICATION.job.company}`),
+    ).toBeInTheDocument()
+
+    const closeButton = screen.getByRole('button', { name: /close/i })
+    await user.click(closeButton)
+
+    await waitFor(() => {
+      expect(
+        screen.queryByRole('heading', {
+          name: MOCKED_JOB_APPLICATION.job.title,
+        }),
+      ).not.toBeInTheDocument()
+    })
   })
 })
