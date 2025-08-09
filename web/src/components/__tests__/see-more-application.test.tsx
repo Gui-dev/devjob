@@ -58,4 +58,25 @@ describe('<SeeMoreApplication />', () => {
     expect(triggerButton).toBeInTheDocument()
     expect(triggerButton).toHaveAttribute('data-testid', 'button')
   })
+
+  it('should be able to open the dialog and display job application details', async () => {
+    render(<SeeMoreApplication jobApplication={MOCKED_JOB_APPLICATION} />)
+
+    const triggerButton = screen.getByRole('button', { name: /ver mais/i })
+    await user.click(triggerButton)
+
+    expect(
+      screen.getByRole('heading', { name: MOCKED_JOB_APPLICATION.job.title }),
+    ).toBeInTheDocument()
+    expect(
+      screen.getByText(`${MOCKED_JOB_APPLICATION.job.company}`),
+    ).toBeInTheDocument()
+    expect(
+      screen.getByText(`${MOCKED_JOB_APPLICATION.job.location}`),
+    ).toBeInTheDocument()
+    expect(
+      screen.getByText(`${MOCKED_JOB_APPLICATION.job.type}`),
+    ).toBeInTheDocument()
+    screen.debug()
+  })
 })
