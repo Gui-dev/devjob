@@ -1,7 +1,6 @@
 import { compare } from 'bcrypt'
 
 import type { IUserRepositoryContract } from '../../contracts/user-repository-contract'
-import { createAccessToken, createRefreshToken } from '../../lib/jwt'
 
 interface IUserLoginProps {
   email: string
@@ -24,13 +23,8 @@ export class UserLoginUseCase {
       throw new Error('Invalid credentials')
     }
 
-    const accessToken = createAccessToken(user.id, user.role)
-
-    const refreshToken = createRefreshToken(user.id, user.role)
-
     return {
-      accessToken,
-      refreshToken,
+      user,
     }
   }
 }

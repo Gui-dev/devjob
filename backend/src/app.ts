@@ -33,20 +33,22 @@ import { NotFoundError } from './http/errors/not-found-error'
 import bullMQPlugin from './plugins/bullmq'
 import { emailWorker } from './services/email-processor'
 
-export const app = Fastify().withTypeProvider<ZodTypeProvider>()
+export const app = Fastify({
+  logger: { transport: { target: 'pino-pretty' } },
+}).withTypeProvider<ZodTypeProvider>()
 
-app.register(fastifyCookie)
-app.register(cors)
+app.register(cors, {
+  origin: 'http://localhost:3000',
+})
+
+app.register(fastifyCookie, {
+  secret: 'secret-cookie',
+})
+
 app.register(jwt, {
   secret: env.JWT_SECRET,
-  cookie: {
-    cookieName: 'refreshToken',
-    signed: false,
-  },
-  sign: {
-    expiresIn: '15m',
-  },
 })
+
 app.register(bullMQPlugin)
 emailWorker
 
