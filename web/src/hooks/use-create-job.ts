@@ -5,7 +5,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 export const useCreateJob = () => {
   const queryClient = useQueryClient()
 
-  const { mutate, isPending } = useMutation({
+  const { mutateAsync, isPending } = useMutation({
     mutationFn: async (data: CreateJobSchemaData) => {
       const { data: result } = await api.post('/jobs', data)
       return result
@@ -13,11 +13,12 @@ export const useCreateJob = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['jobs'] })
       queryClient.invalidateQueries({ queryKey: ['job-applications'] })
+      queryClient.invalidateQueries({ queryKey: ['stats'] })
     },
   })
 
   return {
-    mutate,
+    mutateAsync,
     isPending,
   }
 }

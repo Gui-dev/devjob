@@ -6,7 +6,6 @@ import type { JWT } from 'next-auth/jwt'
 import { api } from '@/lib/api'
 
 const refreshAccessToken = async (token: JWT): Promise<JWT> => {
-  console.log('Atualizando token', token)
   try {
     const response = await axios.post('http://localhost:3333/token/refresh', {
       refreshToken: token.refreshToken,
