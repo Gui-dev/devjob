@@ -7,7 +7,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '../ui/dialog'
-import { Badge } from '../ui/badge'
+import { ApplicationStatus } from '../application-status'
 
 interface ISeeMoreApplicationProps {
   jobApplication: JobApplication
@@ -27,17 +27,17 @@ export const SeeMoreApplication = ({
         </DialogHeader>
         <div className="spce-y-3">
           <p>
-            <strong>Empresa</strong> {jobApplication.job.company}
+            <strong>Empresa: </strong> {jobApplication.job.company}
           </p>
           <p>
-            <strong>Localização</strong> {jobApplication.job.location}
+            <strong>Localização: </strong> {jobApplication.job.location}
           </p>
           <p>
-            <strong>Tipo</strong> {jobApplication.job.type}
+            <strong>Tipo: </strong> {jobApplication.job.type}
           </p>
           <p>
             <strong>Status da candidatura: </strong>{' '}
-            <Badge className="ml-1">{jobApplication.status}</Badge>
+            <ApplicationStatus status={jobApplication.status} />
           </p>
           <div>
             <strong>Descrição</strong>
