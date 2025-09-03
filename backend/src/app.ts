@@ -32,6 +32,7 @@ import { NotFoundError } from './http/errors/not-found-error'
 
 import bullMQPlugin from './plugins/bullmq'
 import { emailWorker } from './services/email-processor'
+import { getJobsByRecruiterIdRoute } from './http/controllers/jobs/get-job-by-recruiter-id'
 
 export const app = Fastify({
   logger: { transport: { target: 'pino-pretty' } },
@@ -39,6 +40,8 @@ export const app = Fastify({
 
 app.register(cors, {
   origin: 'http://localhost:3000',
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
 })
 
 app.register(fastifyCookie, {
@@ -99,6 +102,7 @@ app.register(getStatsRoute)
 app.register(getCandidateStatsRoute)
 app.register(getRecruiterStatsRoute)
 app.register(updateJobApplicationStatusRoute)
+app.register(getJobsByRecruiterIdRoute)
 
 app.setErrorHandler((error, _, reply) => {
   if (hasZodFastifySchemaValidationErrors(error)) {

@@ -42,9 +42,6 @@ export const refreshTokenRoute = async (app: FastifyInstance) => {
         { expiresIn: '7d' },
       )
 
-      console.log('access token', accessToken)
-      console.log('refresh token', newRefreshToken)
-
       return reply
         .status(200)
         .send({ accessToken, refreshToken: newRefreshToken })
