@@ -36,14 +36,6 @@ vi.mock('@/components/dashboard-components/card-resume', () => ({
   )),
 }))
 
-// vi.mock('@/components/dashboard-components/see-more-application', () => ({
-//   SeeMoreApplication: vi.fn(({ jobApplication }) => (
-//     <button type="button" data-testid="see-more-button" onClick={() => vi.fn()}>
-//       Ver mais: {jobApplication.id}
-//     </button>
-//   )),
-// }))
-
 vi.mock('@/components/pagination-bar', () => ({
   PaginationBar: vi.fn(({ currentPage, totalPages }) => (
     <div data-testid="pagination-bar">
