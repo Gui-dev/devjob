@@ -6,10 +6,13 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 
 import RecruiterProfile from '@/app/(main)/(private)/dashboard/recruiter/page'
 import { useGetStats } from '@/hooks/use-get-stats'
-import { useGetJobApplications } from '@/hooks/use-get-job-applications'
+import {
+  useGetUserApplications,
+  type IGetRecruiterJobsResponse,
+} from '@/hooks/use-get-user-applications'
 
 vi.mock('@/hooks/use-get-stats')
-vi.mock('@/hooks/use-get-job-applications')
+vi.mock('@/hooks/use-get-user-applications')
 
 vi.mock('@/components/dashboard-components/card-resume', () => ({
   CardResume: vi.fn(({ title, resume }) => (
@@ -103,11 +106,11 @@ const MOCK_STATS_DATA = {
   totalJobs: 5,
   totalApplications: 20,
   acceptedApplications: 10,
-  pendingApplications: 5,
-  rejectedApplications: 5,
+  pendingApplications: 6,
+  rejectedApplications: 4,
 }
 
-const MOCK_JOBS_DATA = {
+const MOCK_JOBS_DATA: IGetRecruiterJobsResponse = {
   jobs: [
     {
       id: 'job-1',
@@ -122,7 +125,7 @@ const MOCK_JOBS_DATA = {
     },
     {
       id: 'job-2',
-      title: 'UI/UX Designer',
+      title: 'Desenvolvedor Frontend',
       description: 'Responsável por criar interfaces amigáveis.',
       company: 'DesignWorks',
       location: 'Híbrido',
@@ -147,7 +150,7 @@ describe('<RecruiterProfile />', () => {
       isPending: true,
     })
 
-    vi.mocked(useGetJobApplications).mockReturnValue({
+    vi.mocked(useGetUserApplications).mockReturnValue({
       data: undefined,
       isPending: true,
     })
@@ -158,5 +161,36 @@ describe('<RecruiterProfile />', () => {
     expect(
       screen.getByTestId('skeleton-job-application-resume'),
     ).toBeInTheDocument()
+  })
+
+  it('should be able to render stats and jobs when data is available', async () => {
+    vi.mocked(useGetStats).mockReturnValue({
+      stats: MOCK_STATS_DATA,
+      isPending: false,
+    })
+
+    vi.mocked(useGetUserApplications).mockReturnValue({
+      data: MOCK_JOBS_DATA,
+      isPending: false,
+    })
+
+    render(<WrapperRecruiterProfile />)
+
+    await waitFor(() => {
+      expect(screen.getByText(/minhas vagas criadas/i)).toBeInTheDocument()
+      expect(screen.getByText('5')).toBeInTheDocument()
+      expect(screen.getByText(/total de candidaturas/i)).toBeInTheDocument()
+      expect(screen.getByText('20')).toBeInTheDocument()
+
+      expect(screen.getByTestId('create-job-form')).toBeInTheDocument()
+
+      expect(screen.getByText(/desenvolvedor backend/i)).toBeInTheDocument()
+      expect(screen.getByText(/desenvolvedor frontend/i)).toBeInTheDocument()
+
+      const link = screen.getAllByRole('link', { name: /ver detalhes/i })
+      expect(link[0]).toHaveAttribute('href', '/dashboard/recruiter/job/job-1')
+
+      expect(screen.getByTestId('pagination-bar')).toBeInTheDocument()
+    })
   })
 })

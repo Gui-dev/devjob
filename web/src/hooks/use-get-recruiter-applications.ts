@@ -19,6 +19,7 @@ export type JobApplication = {
     company: string
     location: string
     type: 'REMOTE' | 'ONSITE' | 'HYBRID'
+    level: 'JUNIOR' | 'PLENO' | 'SENIOR'
     createdAt: Date
   }
 
