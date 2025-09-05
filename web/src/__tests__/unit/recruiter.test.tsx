@@ -193,4 +193,30 @@ describe('<RecruiterProfile />', () => {
       expect(screen.getByTestId('pagination-bar')).toBeInTheDocument()
     })
   })
+
+  it('should be able to render a message when there are no jobs created', async () => {
+    vi.mocked(useGetStats).mockReturnValue({
+      stats: MOCK_STATS_DATA,
+      isPending: false,
+    })
+
+    vi.mocked(useGetUserApplications).mockReturnValue({
+      data: {
+        jobs: [],
+        meta: { total: 0, page: 1, pages: 1 },
+      },
+      isPending: false,
+    })
+
+    render(<WrapperRecruiterProfile />)
+
+    await waitFor(() => {
+      expect(
+        screen.getByText(/você ainda não criou nenhuma vaga/i),
+      ).toBeInTheDocument()
+      expect(
+        screen.queryByText(/desenvolvedor frontend/i),
+      ).not.toBeInTheDocument()
+    })
+  })
 })
