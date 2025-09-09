@@ -203,8 +203,8 @@ describe('<CreateJobForm />', () => {
     await user.type(screen.getByPlaceholderText(/ex: react/i), 'Typescript')
     await user.click(addButton)
 
-    const createJobButton = screen.getByRole('button', { name: /criar vaga/i })
-    await user.click(createJobButton)
+    const submitButton = screen.getByRole('button', { name: /criar vaga/i })
+    await user.click(submitButton)
 
     await waitFor(() => {
       expect(mockMutateAsync).toHaveBeenCalledWith(mockFormData)
@@ -212,5 +212,35 @@ describe('<CreateJobForm />', () => {
 
     expect(toast.success).toHaveBeenCalledWith('Vaga criada com sucesso!')
     expect(mockReset).toHaveBeenCalled()
+  })
+
+  it('should be able to show loading state when submitting', async () => {
+    vi.mocked(useCreateJob).mockReturnValue({
+      mutateAsync: vi.fn(),
+      isPending: true,
+    })
+
+    mockWatch.mockReturnValueOnce({
+      title: 'Vaga de Teste',
+      description: 'Descrição da vaga de teste.',
+      company: 'Empresa Teste',
+      location: 'Local Teste',
+      type: 'REMOTE',
+      level: 'JUNIOR',
+      technologies: [],
+    })
+
+    render(<WrapperCreateJobForm />)
+
+    const triggerButton = screen.getByRole('button', {
+      name: /criar nova vaga/i,
+    })
+
+    expect(triggerButton).toBeInTheDocument()
+    await user.click(triggerButton)
+
+    await waitFor(() => {
+      expect(screen.getByTestId('loader-circle')).toBeInTheDocument()
+    })
   })
 })
