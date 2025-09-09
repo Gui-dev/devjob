@@ -7,7 +7,7 @@ import * as reactHookForm from 'react-hook-form'
 
 import { CreateJobForm } from '@/components/dashboard-components/create-job-form'
 import { useCreateJob } from '@/hooks/use-create-job'
-import { CreateJobSchemaData } from '@/validations/create-job-schema'
+import type { CreateJobSchemaData } from '@/validations/create-job-schema'
 
 vi.mock('@/hooks/use-create-job', () => ({
   useCreateJob: vi.fn(),
@@ -157,5 +157,60 @@ describe('<CreateJobForm />', () => {
     })
 
     expect(dialogTitle).toBeInTheDocument()
+  })
+
+  it('should be able to allow filling the form and submmitting', async () => {
+    const mockMutateAsync = vi.fn().mockResolvedValue({})
+    vi.mocked(useCreateJob).mockReturnValue({
+      mutateAsync: mockMutateAsync,
+      isPending: false,
+    })
+
+    const mockFormData: CreateJobSchemaData = {
+      title: 'Vaga de Teste',
+      description: 'Descrição da vaga de teste.',
+      company: 'Empresa Teste',
+      location: 'Local Teste',
+      type: 'REMOTE',
+      level: 'JUNIOR',
+      technologies: ['React', 'TypeScript'],
+    }
+
+    mockWatch.mockImplementation(name => {
+      switch (name) {
+        case 'technologies':
+          return ['React', 'Typescript']
+        default:
+          return mockFormData
+      }
+    })
+
+    render(<WrapperCreateJobForm />)
+
+    const triggerButton = screen.getByRole('button', {
+      name: /criar nova vaga/i,
+    })
+
+    expect(triggerButton).toBeInTheDocument()
+
+    await user.click(triggerButton)
+
+    const addButton = screen.getByRole('button', { name: /adicionar/i })
+
+    await user.type(screen.getByPlaceholderText(/ex: react/i), 'React')
+    await user.click(addButton)
+
+    await user.type(screen.getByPlaceholderText(/ex: react/i), 'Typescript')
+    await user.click(addButton)
+
+    const createJobButton = screen.getByRole('button', { name: /criar vaga/i })
+    await user.click(createJobButton)
+
+    await waitFor(() => {
+      expect(mockMutateAsync).toHaveBeenCalledWith(mockFormData)
+    })
+
+    expect(toast.success).toHaveBeenCalledWith('Vaga criada com sucesso!')
+    expect(mockReset).toHaveBeenCalled()
   })
 })
