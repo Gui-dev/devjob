@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
 
-import { CardResume } from '../dashboard-components/card-resume'
+import { CardResume } from './../card-resume'
 
 vi.mock('@/components/ui/card', () => ({
   Card: vi.fn(({ children, className }) => (
