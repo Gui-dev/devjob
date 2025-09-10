@@ -129,4 +129,38 @@ describe('<CandidateApplicationDetails />', () => {
 
     expect(screen.getByTestId('eye')).toBeInTheDocument()
   })
+
+  it('should be able to render all candidate details inside the sheet', async () => {
+    render(<CandidateApplicationDetails candidate={MOCK_CANDIDATE} />, {
+      wrapper: WrapperCandidateApplicationDetails,
+    })
+
+    const triggerButton = screen.getByRole('button', { name: /visualizar/i })
+    await user.click(triggerButton)
+
+    await waitFor(() => {
+      expect(screen.getByTestId('sheet-title')).toHaveTextContent(
+        'Detalhes do candidato',
+      )
+
+      expect(screen.getByText(/nome/i)).toBeInTheDocument()
+      expect(screen.getByText(/joão da silva/i)).toBeInTheDocument()
+
+      expect(screen.getByText(/e-mail/i)).toBeInTheDocument()
+      expect(screen.getByText(/joao@example.com/i)).toBeInTheDocument()
+
+      expect(screen.getByText(/mensagem/i)).toBeInTheDocument()
+      expect(
+        screen.getByText(/olá, sou um candidato motivado./i),
+      ).toBeInTheDocument()
+
+      const gitHubUrl = screen.getByText(MOCK_CANDIDATE.githubUrl)
+      expect(gitHubUrl).toBeInTheDocument()
+      expect(gitHubUrl).toHaveAttribute('href', MOCK_CANDIDATE.githubUrl)
+
+      const linkedinUrl = screen.getByText(MOCK_CANDIDATE.linkedinUrl)
+      expect(linkedinUrl).toBeInTheDocument()
+      expect(linkedinUrl).toHaveAttribute('href', MOCK_CANDIDATE.linkedinUrl)
+    })
+  })
 })
