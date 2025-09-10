@@ -3,7 +3,6 @@ import { render, screen, waitFor } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { toast } from 'sonner'
-import * as reactHookForm from 'react-hook-form'
 
 import { CreateJobForm } from '@/components/dashboard-components/create-job-form'
 import { useCreateJob } from '@/hooks/use-create-job'
@@ -89,7 +88,6 @@ vi.mock('@/components/ui/select', () => ({
   )),
 }))
 
-const mockUseForm = vi.fn()
 const mockHandleSubmit = vi.fn()
 const mockRegister = vi.fn()
 const mockSetValue = vi.fn()

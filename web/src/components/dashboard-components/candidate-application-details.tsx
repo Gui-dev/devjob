@@ -39,7 +39,7 @@ export const CandidateApplicationDetails = ({
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <Button variant="secondary" size="icon">
+        <Button variant="secondary" size="icon" aria-label="Visualizar">
           <Eye />
         </Button>
       </SheetTrigger>

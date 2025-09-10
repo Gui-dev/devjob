@@ -2,7 +2,6 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { render, screen, waitFor } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import * as nextAuthReact from 'next-auth/react'
 
 import UserProfile from '@/app/(main)/(private)/dashboard/candidate/page'
 import { useGetStats } from '@/hooks/use-get-stats'
