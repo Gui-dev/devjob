@@ -204,4 +204,23 @@ describe('<CandidateApplicationDetails />', () => {
       jobApplicationId: MOCK_CANDIDATE.id,
     })
   })
+
+  it('should be able to call mutateAsync with REJECTED when reject button is clicked', async () => {
+    render(<CandidateApplicationDetails candidate={MOCK_CANDIDATE} />, {
+      wrapper: WrapperCandidateApplicationDetails,
+    })
+
+    const triggerButton = screen.getByRole('button', { name: /visualizar/i })
+    await user.click(triggerButton)
+
+    const acceptButton = screen.getByRole('button', { name: /rejeitar/i })
+    expect(acceptButton).toBeInTheDocument()
+
+    await user.click(acceptButton)
+
+    expect(mockMutate).toHaveBeenCalledWith({
+      status: 'REJECTED',
+      jobApplicationId: MOCK_CANDIDATE.id,
+    })
+  })
 })
