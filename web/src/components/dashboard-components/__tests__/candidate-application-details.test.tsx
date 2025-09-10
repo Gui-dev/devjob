@@ -154,13 +154,35 @@ describe('<CandidateApplicationDetails />', () => {
         screen.getByText(/olá, sou um candidato motivado./i),
       ).toBeInTheDocument()
 
-      const gitHubUrl = screen.getByText(MOCK_CANDIDATE.githubUrl)
+      const gitHubUrl = screen.getByText(MOCK_CANDIDATE.githubUrl || '')
       expect(gitHubUrl).toBeInTheDocument()
       expect(gitHubUrl).toHaveAttribute('href', MOCK_CANDIDATE.githubUrl)
 
-      const linkedinUrl = screen.getByText(MOCK_CANDIDATE.linkedinUrl)
+      const linkedinUrl = screen.getByText(MOCK_CANDIDATE.linkedinUrl || '')
       expect(linkedinUrl).toBeInTheDocument()
       expect(linkedinUrl).toHaveAttribute('href', MOCK_CANDIDATE.linkedinUrl)
+    })
+  })
+
+  it('should no be able to render conditional fields id data is not provided', async () => {
+    const CANDIDATE_WITHOUT_DATA = {
+      ...MOCK_CANDIDATE,
+      message: undefined,
+      githubUrl: undefined,
+      linkedinUrl: undefined,
+    }
+
+    render(<CandidateApplicationDetails candidate={CANDIDATE_WITHOUT_DATA} />, {
+      wrapper: WrapperCandidateApplicationDetails,
+    })
+
+    const triggerButton = screen.getByRole('button', { name: /visualizar/i })
+    await user.click(triggerButton)
+
+    await waitFor(() => {
+      expect(screen.queryByText(/mensagem/i)).not.toBeInTheDocument()
+      expect(screen.queryByText(/github/i)).not.toBeInTheDocument()
+      expect(screen.queryByText(/linkedin/i)).not.toBeInTheDocument()
     })
   })
 })

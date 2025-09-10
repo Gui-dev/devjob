@@ -5,9 +5,9 @@ export type JobApplication = {
   id: string
   jobId: string
   userId: string
-  message: string
-  githubUrl: string
-  linkedinUrl: string
+  message?: string
+  githubUrl?: string
+  linkedinUrl?: string
   status: 'PENDING' | 'ACCEPTED' | 'REJECTED'
   createdAt: Date
 
