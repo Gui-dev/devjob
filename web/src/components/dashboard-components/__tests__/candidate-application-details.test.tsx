@@ -185,4 +185,23 @@ describe('<CandidateApplicationDetails />', () => {
       expect(screen.queryByText(/linkedin/i)).not.toBeInTheDocument()
     })
   })
+
+  it('should be able to call mutateAsync with ACCEPTED when accept button is clicked', async () => {
+    render(<CandidateApplicationDetails candidate={MOCK_CANDIDATE} />, {
+      wrapper: WrapperCandidateApplicationDetails,
+    })
+
+    const triggerButton = screen.getByRole('button', { name: /visualizar/i })
+    await user.click(triggerButton)
+
+    const acceptButton = screen.getByRole('button', { name: /aprovar/i })
+    expect(acceptButton).toBeInTheDocument()
+
+    await user.click(acceptButton)
+
+    expect(mockMutate).toHaveBeenCalledWith({
+      status: 'ACCEPTED',
+      jobApplicationId: MOCK_CANDIDATE.id,
+    })
+  })
 })
