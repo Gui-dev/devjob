@@ -223,4 +223,26 @@ describe('<CandidateApplicationDetails />', () => {
       jobApplicationId: MOCK_CANDIDATE.id,
     })
   })
+
+  it('should be able disable buttons when status update is pending', async () => {
+    vi.mocked(useUpdateStatus).mockReturnValue({
+      mutateAsync: mockMutate.mockResolvedValue({}),
+      isPending: true,
+    })
+
+    render(<CandidateApplicationDetails candidate={MOCK_CANDIDATE} />, {
+      wrapper: WrapperCandidateApplicationDetails,
+    })
+
+    const triggerButton = screen.getByRole('button', { name: /visualizar/i })
+    await user.click(triggerButton)
+
+    const acceptButton = screen.getByRole('button', { name: /aprovar/i })
+    const rejectButton = screen.getByRole('button', { name: /rejeitar/i })
+
+    await waitFor(() => {
+      expect(acceptButton).toBeDisabled()
+      expect(rejectButton).toBeDisabled()
+    })
+  })
 })
