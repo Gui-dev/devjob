@@ -2,6 +2,7 @@ import { randomUUID } from 'node:crypto'
 
 import type {
   FindByJobApplicationIdResponse,
+  IFindAllResponse,
   IFindJobByIDResponse,
   IFindUserByIDResponse,
   IJobApplicationRepositoryContract,
@@ -21,6 +22,37 @@ export class InMemoryJobApplicationRepository
   private items: JobApplication[] = []
   private jobs: Job[] = []
   private users: User[] = []
+
+  public async findAll(page: number, limit: number): Promise<IFindAllResponse> {
+    const allJobApplications = this.items
+
+    const total = allJobApplications.length
+    const start = (page - 1) * limit
+    const end = start + limit
+    const paginated = allJobApplications.slice(start, end)
+
+    const result: JobApplicationWithUserAndJob[] = paginated.map(
+      jobApplication => {
+        const user = this.users || []
+        const job = this.jobs || []
+
+        if (!user || !job) {
+          throw new Error('User or job not found')
+        }
+
+        return {
+          ...jobApplication,
+          user,
+          job,
+        }
+      },
+    )
+
+    return {
+      jobApplications: result,
+      total,
+    }
+  }
 
   public async findByJobApplicationId(
     jobApplicationId: string,
@@ -164,15 +196,34 @@ export class InMemoryJobApplicationRepository
   public async updateStatus(
     jobApplicationId: string,
     status: 'PENDING' | 'ACCEPTED' | 'REJECTED',
-  ): Promise<JobApplication> {
-    const jobApplication = this.items.find(
+  ): Promise<JobApplicationWithUserAndJob> {
+    const allJobApplications = this.items
+    const jobApplication: JobApplication = this.items.filter(
       jobApplication => jobApplication.id === jobApplicationId,
     )
-    if (!jobApplication) {
-      throw new Error('Job application not found')
-    }
+
     jobApplication.status = status
-    return jobApplication
+
+    this.items.push([...allJobApplications, jobApplication])
+
+    const result: JobApplicationWithUserAndJob[] = this.items.map(
+      jobApplication => {
+        const user = this.users.find(user => user.id === jobApplication.userId)
+        const job = this.jobs.find(job => job.id === jobApplication.jobId)
+
+        if (!user || !job) {
+          throw new Error('User or job not found')
+        }
+
+        return {
+          ...jobApplication,
+          user,
+          job,
+        }
+      },
+    )
+
+    return result
   }
 
   public get() {

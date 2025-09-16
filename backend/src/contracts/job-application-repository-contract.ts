@@ -30,7 +30,13 @@ export interface IFindJobByIDResponse {
   total: number
 }
 
+export interface IFindAllResponse {
+  jobApplications: JobApplicationWithUserAndJob[]
+  total: number
+}
+
 export interface IJobApplicationRepositoryContract {
+  findAll(page: number, limit: number): Promise<IFindAllResponse>
   findByJobApplicationId(
     jobApplicationId: string,
   ): Promise<FindByJobApplicationIdResponse | null>
