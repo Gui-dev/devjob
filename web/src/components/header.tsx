@@ -14,10 +14,15 @@ import {
 import { Avatar, AvatarFallback } from './ui/avatar'
 import { User } from 'lucide-react'
 import { ModeToggle } from './toggle-theme'
+import { SkeletonHeader } from './skeleton-header'
 
 export const Header = () => {
-  const { data: session } = useSession()
+  const { data: session, status } = useSession()
   const role = session?.user?.role.toLowerCase()
+
+  if (status === 'loading') {
+    return <SkeletonHeader />
+  }
 
   return (
     <header className="flex items-center justify-between px-6 py-4 shadow-md">
