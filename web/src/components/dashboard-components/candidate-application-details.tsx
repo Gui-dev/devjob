@@ -12,7 +12,7 @@ import {
   SheetTrigger,
 } from '../ui/sheet'
 import { Button } from '../ui/button'
-import type { JobApplication } from '@/hooks/use-get-recruiter-applications'
+import type { JobApplication } from '@/hooks/_types/job-application-type'
 import { Separator } from '../ui/separator'
 import { useUpdateStatus } from '@/hooks/use-update-status'
 
