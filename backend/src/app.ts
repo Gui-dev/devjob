@@ -33,6 +33,7 @@ import { NotFoundError } from './http/errors/not-found-error'
 import bullMQPlugin from './plugins/bullmq'
 import { emailWorker } from './services/email-processor'
 import { getJobsByRecruiterIdRoute } from './http/controllers/jobs/get-job-by-recruiter-id'
+import { getAllJobApplicationsRoute } from './http/controllers/job-applications/get-all-job-applications'
 
 export const app = Fastify({
   logger: { transport: { target: 'pino-pretty' } },
@@ -98,6 +99,7 @@ app.register(getJobDetailsRoute)
 app.register(createJobApplicationRoute)
 app.register(getUserApplicationsRoute)
 app.register(getJobApplicationsRoute)
+app.register(getAllJobApplicationsRoute)
 app.register(getStatsRoute)
 app.register(getCandidateStatsRoute)
 app.register(getRecruiterStatsRoute)
