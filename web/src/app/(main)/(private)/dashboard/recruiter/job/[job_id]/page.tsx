@@ -17,13 +17,15 @@ import { useJobDetails } from '@/hooks/use-job-details'
 import { MoveLeft } from 'lucide-react'
 import Link from 'next/link'
 import { useParams } from 'next/navigation'
+import { useState } from 'react'
 
 const RecruiterJobDetails = () => {
+  const [currentPage, setCurrentPage] = useState(1)
   const { job_id } = useParams<{ job_id: string }>()
   const { job, isLoading } = useJobDetails({ job_id })
   const { data, isPending } = useGetRecruiterApplications({
     jobId: job_id,
-    page: 1,
+    page: currentPage,
   })
 
   return (
@@ -102,6 +104,7 @@ const RecruiterJobDetails = () => {
       <PaginationBar
         currentPage={data?.meta.page || 1}
         totalPages={data?.meta.pages || 1}
+        onPageChange={setCurrentPage}
       />
     </div>
   )

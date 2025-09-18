@@ -1,4 +1,3 @@
-import { useJobsFilters } from '@/hooks/use-jobs-filters'
 import {
   Pagination,
   PaginationContent,
@@ -12,13 +11,14 @@ import {
 interface IPaginationProps {
   currentPage: number
   totalPages: number
+  onPageChange: (page: number) => void
 }
 
 export const PaginationBar = ({
   currentPage,
   totalPages,
+  onPageChange,
 }: IPaginationProps) => {
-  const { updateFilters } = useJobsFilters()
   const maxVisiblePages = 5
 
   const generatePages = () => {
@@ -43,7 +43,7 @@ export const PaginationBar = ({
             <PaginationPrevious
               title="Página anterior"
               aria-label="Página anterior"
-              onClick={() => updateFilters({ page: currentPage - 1 })}
+              onClick={() => onPageChange(currentPage - 1)}
             />
           </PaginationItem>
         )}
@@ -51,9 +51,7 @@ export const PaginationBar = ({
         {pages[0] > 1 && (
           <>
             <PaginationItem>
-              <PaginationLink onClick={() => updateFilters({ page: 1 })}>
-                1
-              </PaginationLink>
+              <PaginationLink onClick={() => onPageChange(1)}>1</PaginationLink>
             </PaginationItem>
             {pages[0] > 2 && (
               <PaginationItem>
@@ -67,7 +65,7 @@ export const PaginationBar = ({
           return (
             <PaginationItem key={page}>
               <PaginationLink
-                onClick={() => updateFilters({ page })}
+                onClick={() => onPageChange(page)}
                 isActive={page === currentPage}
               >
                 {page}
@@ -84,9 +82,7 @@ export const PaginationBar = ({
               </PaginationItem>
             )}
             <PaginationItem>
-              <PaginationLink
-                onClick={() => updateFilters({ page: totalPages })}
-              >
+              <PaginationLink onClick={() => onPageChange(totalPages)}>
                 {totalPages}
               </PaginationLink>
             </PaginationItem>
@@ -98,7 +94,7 @@ export const PaginationBar = ({
             <PaginationNext
               title="Próxima página"
               aria-label="Próxima página"
-              onClick={() => updateFilters({ page: currentPage + 1 })}
+              onClick={() => onPageChange(currentPage + 1)}
             />
           </PaginationItem>
         )}
