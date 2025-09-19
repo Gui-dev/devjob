@@ -5,6 +5,7 @@ import { ThemeProvider } from '@/components/theme-provider'
 import { Toaster } from '@/components/ui/sonner'
 import { AuthProvider } from '@/components/auth-provider'
 import { QueryProvider } from '@/providers/query-provider'
+import { CheckUserAuthenticate } from '@/components/dashboard-components/check-user-authenticate'
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -38,7 +39,9 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
-            <QueryProvider>{children}</QueryProvider>
+            <QueryProvider>
+              <CheckUserAuthenticate>{children}</CheckUserAuthenticate>
+            </QueryProvider>
             <Toaster position="top-right" theme="system" />
           </ThemeProvider>
         </AuthProvider>
