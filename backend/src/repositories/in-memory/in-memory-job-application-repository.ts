@@ -24,17 +24,19 @@ export class InMemoryJobApplicationRepository
   private users: User[] = []
 
   public async findAll(page: number, limit: number): Promise<IFindAllResponse> {
-    const allJobApplications = this.items
+    const sortedJobApplications = [...this.items].sort(
+      (a, b) => b.createdAt.getTime() - a.createdAt.getTime(),
+    )
 
-    const total = allJobApplications.length
+    const total = sortedJobApplications.length
     const start = (page - 1) * limit
     const end = start + limit
-    const paginated = allJobApplications.slice(start, end)
+    const paginatedItems = sortedJobApplications.slice(start, end)
 
-    const result: JobApplicationWithUserAndJob[] = paginated.map(
+    const result: JobApplicationWithUserAndJob[] = paginatedItems.map(
       jobApplication => {
-        const user = this.users || []
-        const job = this.jobs || []
+        const user = this.users.find(u => u.id === jobApplication.userId)
+        const job = this.jobs.find(j => j.id === jobApplication.jobId)
 
         if (!user || !job) {
           throw new Error('User or job not found')
@@ -197,31 +199,33 @@ export class InMemoryJobApplicationRepository
     jobApplicationId: string,
     status: 'PENDING' | 'ACCEPTED' | 'REJECTED',
   ): Promise<JobApplicationWithUserAndJob> {
-    const allJobApplications = this.items
-    const jobApplication: JobApplication = this.items.filter(
-      jobApplication => jobApplication.id === jobApplicationId,
+    const jobApplicationIndex = this.items.findIndex(
+      item => item.id === jobApplicationId,
     )
 
-    jobApplication.status = status
+    if (jobApplicationIndex < 0) {
+      throw new Error('Job application not found')
+    }
 
-    this.items.push([...allJobApplications, jobApplication])
+    const originalJobApplication = this.items[jobApplicationIndex]
+    originalJobApplication.status = status
 
-    const result: JobApplicationWithUserAndJob[] = this.items.map(
-      jobApplication => {
-        const user = this.users.find(user => user.id === jobApplication.userId)
-        const job = this.jobs.find(job => job.id === jobApplication.jobId)
+    this.items[jobApplicationIndex] = originalJobApplication
 
-        if (!user || !job) {
-          throw new Error('User or job not found')
-        }
-
-        return {
-          ...jobApplication,
-          user,
-          job,
-        }
-      },
+    const user = this.users.find(
+      user => user.id === originalJobApplication.userId,
     )
+    const job = this.jobs.find(job => job.id === originalJobApplication.jobId)
+
+    if (!user || !job) {
+      throw new Error('Associated user or job not found.')
+    }
+
+    const result: JobApplicationWithUserAndJob = {
+      ...originalJobApplication,
+      user,
+      job,
+    }
 
     return result
   }
