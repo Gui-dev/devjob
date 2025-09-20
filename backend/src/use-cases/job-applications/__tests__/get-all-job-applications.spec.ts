@@ -63,4 +63,19 @@ describe('Get All Job Application Use Case', () => {
       pages: 3,
     })
   })
+
+  it('should be able to fetch the second page of job applications', async () => {
+    const { jobApplications, meta } = await sut.execute({
+      page: 2,
+      limit: 10,
+    })
+
+    console.log({ jobApplications, meta })
+    expect(jobApplications).toHaveLength(10)
+    expect(meta).toEqual({
+      total: 22,
+      page: 2,
+      pages: 3,
+    })
+  })
 })
