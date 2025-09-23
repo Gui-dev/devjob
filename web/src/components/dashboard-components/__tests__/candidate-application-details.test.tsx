@@ -5,7 +5,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 
 import { CandidateApplicationDetails } from '@/components/dashboard-components/candidate-application-details'
 import { useUpdateStatus } from '@/hooks/use-update-status'
-import type { JobApplication } from '@/hooks/use-get-recruiter-applications'
+import type { JobApplication } from '@/hooks/_types/job-application-type'
 import type React from 'react'
 
 vi.mock('@/hooks/use-update-status', () => ({

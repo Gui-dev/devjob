@@ -2,10 +2,10 @@ export type JobApplication = {
   id: string
   jobId: string
   userId: string
+  status: 'PENDING' | 'ACCEPTED' | 'REJECTED'
   message: string
   githubUrl: string
   linkedinUrl: string
-  status: 'PENDING' | 'ACCEPTED' | 'REJECTED'
   createdAt: Date
 
   job: {
@@ -16,6 +16,7 @@ export type JobApplication = {
     company: string
     location: string
     type: 'REMOTE' | 'ONSITE' | 'HYBRID'
+    level: 'JUNIOR' | 'PLENO' | 'SENIOR'
     createdAt: Date
   }
 

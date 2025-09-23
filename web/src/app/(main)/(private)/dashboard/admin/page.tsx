@@ -36,9 +36,6 @@ const AdminProfile = () => {
   const { data, isPending: isGetAllJobApplicationsPending } =
     useGetAllJobApplications({ page: currentPage })
 
-  console.log('STATS: ', stats)
-  console.log('JOBS: ', data)
-
   return (
     <div className="max-w-5xl mx-auto mt-10 px-4 space-y-6 pb-6">
       <section>
