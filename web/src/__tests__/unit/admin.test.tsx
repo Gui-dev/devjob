@@ -87,8 +87,8 @@ vi.mock('@/components/ui/table', () => ({
 }))
 
 vi.mock('@/components/application-status', () => ({
-  ApplicationStatus: vi.fn(({ children }) => (
-    <div data-testid="application-status">{children}</div>
+  ApplicationStatus: vi.fn(({ status }) => (
+    <span data-testid="application-status">{status}</span>
   )),
 }))
 
@@ -130,7 +130,7 @@ describe('<AdminProfile />', () => {
         id: 'app-123',
         jobId: 'job-123',
         userId: 'user-123',
-        status: 'ACCEPTED',
+        status: 'PENDING',
         message: 'Olá, sou um candidato motivado.',
         githubUrl: 'https://github.com/candidato',
         linkedinUrl: 'https://linkedin.com/in/candidato',
@@ -211,6 +211,35 @@ describe('<AdminProfile />', () => {
 
       expect(screen.getByTestId('bar-chart')).toBeInTheDocument()
       expect(screen.getByText(/candidatura por vagas/i)).toBeInTheDocument()
+    })
+  })
+
+  it('should be able to render job aplications table when data is loaded', async () => {
+    render(<AdminProfile />, { wrapper: Wrapper })
+
+    await waitFor(() => {
+      expect(
+        screen.getByRole('columnheader', { name: /vaga/i }),
+      ).toBeInTheDocument()
+      expect(
+        screen.getByRole('columnheader', { name: /candidato/i }),
+      ).toBeInTheDocument()
+      expect(
+        screen.getByRole('columnheader', { name: /e-mail/i }),
+      ).toBeInTheDocument()
+
+      const rows = screen.getAllByTestId('table-row')
+
+      expect(rows).toHaveLength(2)
+      expect(
+        screen.getByText(MOCK_JOB_APPLICATIONS.jobApplications[0].user.name),
+      ).toBeInTheDocument()
+      expect(screen.getByTestId('application-status')).toHaveTextContent(
+        'PENDING',
+      )
+      expect(
+        screen.getByTestId('candidate-application-details'),
+      ).toBeInTheDocument()
     })
   })
 })
