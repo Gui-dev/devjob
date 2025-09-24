@@ -55,7 +55,6 @@ describe('Get All Job Application Use Case', () => {
       limit: 10,
     })
 
-    console.log({ jobApplications, meta })
     expect(jobApplications).toHaveLength(10)
     expect(meta).toEqual({
       total: 22,
@@ -70,7 +69,6 @@ describe('Get All Job Application Use Case', () => {
       limit: 10,
     })
 
-    console.log({ jobApplications, meta })
     expect(jobApplications).toHaveLength(10)
     expect(meta).toEqual({
       total: 22,
@@ -85,7 +83,6 @@ describe('Get All Job Application Use Case', () => {
       limit: 10,
     })
 
-    console.log({ jobApplications, meta })
     expect(jobApplications).toHaveLength(2)
     expect(meta).toEqual({
       total: 22,

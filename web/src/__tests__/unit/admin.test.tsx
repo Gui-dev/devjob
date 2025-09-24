@@ -36,6 +36,15 @@ vi.mock('@/components/skeleton-chart', () => ({
   )),
 }))
 
+vi.mock('@/components/dashboard-components/card-resume', () => ({
+  CardResume: vi.fn(({ title, resume }) => (
+    <div data-testid="card-resume">
+      <h2 data-testid="card-resume-title">{title}</h2>
+      <p data-testid="card-resume-value">{resume}</p>
+    </div>
+  )),
+}))
+
 vi.mock(
   '@/components/dashboard-components/candidate-application-details',
   () => ({
@@ -108,7 +117,7 @@ describe('<AdminProfile />', () => {
     totalJobs: 50,
     totalJobApplications: 200,
     totalCandidates: 150,
-    totalRecruiters: 50,
+    totalRecruiters: 40,
     applicationsPerJob: [
       { jobId: 'job-1', total: 10 },
       { jobId: 'job-2', total: 20 },
@@ -189,6 +198,19 @@ describe('<AdminProfile />', () => {
       expect(
         screen.queryByText(/nenhuma candidatura encontrada ainda/i),
       ).not.toBeInTheDocument()
+    })
+  })
+
+  it('should be able to render stats and chart when stats data is loaded', async () => {
+    render(<AdminProfile />, { wrapper: Wrapper })
+
+    await waitFor(() => {
+      expect(screen.getAllByTestId('card-resume')).toHaveLength(4)
+      expect(screen.getByText(/total de empregos/i)).toBeInTheDocument()
+      expect(screen.getByText(MOCK_STATS.totalJobs)).toBeInTheDocument()
+
+      expect(screen.getByTestId('bar-chart')).toBeInTheDocument()
+      expect(screen.getByText(/candidatura por vagas/i)).toBeInTheDocument()
     })
   })
 })
