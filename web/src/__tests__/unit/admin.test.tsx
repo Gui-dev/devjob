@@ -242,4 +242,25 @@ describe('<AdminProfile />', () => {
       ).toBeInTheDocument()
     })
   })
+
+  it('should be able to render a message when there are no applications', async () => {
+    vi.mocked(useGetAllJobApplications).mockReturnValue({
+      data: {
+        jobApplications: [],
+        meta: { total: 0, page: 1, pages: 1 },
+      },
+      isPending: false,
+    })
+
+    render(<AdminProfile />, { wrapper: Wrapper })
+
+    screen.debug()
+
+    await waitFor(() => {
+      expect(
+        screen.getByText(/nenhuma candidatura encontrada ainda/i),
+      ).toBeInTheDocument()
+      expect(screen.queryByTestId('table-body')).toBeEmptyDOMElement()
+    })
+  })
 })
