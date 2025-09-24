@@ -263,4 +263,12 @@ describe('<AdminProfile />', () => {
       expect(screen.queryByTestId('table-body')).toBeEmptyDOMElement()
     })
   })
+
+  it('should be able to render the pagination bar', async () => {
+    render(<AdminProfile />, { wrapper: Wrapper })
+
+    await waitFor(() => {
+      expect(screen.getByTestId('pagination-bar')).toBeInTheDocument()
+    })
+  })
 })
