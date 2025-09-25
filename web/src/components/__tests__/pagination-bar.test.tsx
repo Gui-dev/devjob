@@ -71,4 +71,20 @@ describe('', () => {
 
     expect(mockOnPageChange).toHaveBeenCalledWith(3)
   })
+
+  it('should no be able to render Previous button on the first page', async () => {
+    render(
+      <PaginationBar
+        currentPage={1}
+        totalPages={5}
+        onPageChange={mockOnPageChange}
+      />,
+    )
+
+    await waitFor(() => {
+      expect(
+        screen.queryByLabelText(/página anterior/i),
+      ).not.toBeInTheDocument()
+    })
+  })
 })
