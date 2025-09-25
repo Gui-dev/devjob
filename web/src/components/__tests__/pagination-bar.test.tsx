@@ -43,4 +43,18 @@ describe('', () => {
 
     expect(mockOnPageChange).toHaveBeenCalledWith(3)
   })
+
+  it('should be able to call onPageChange when the Previous button is clicked', async () => {
+    render(
+      <PaginationBar
+        currentPage={2}
+        totalPages={5}
+        onPageChange={mockOnPageChange}
+      />,
+    )
+
+    await user.click(screen.getByLabelText(/página anterior/i))
+
+    expect(mockOnPageChange).toHaveBeenCalledWith(1)
+  })
 })
