@@ -184,4 +184,28 @@ npm run test
 
 Acesse a aplicação em http://localhost:3333.
 
+---
 
+## Contribua
+
+Acesse o repositório do projeto no GitHub:
+
+https://github.com/Gui-dev/devjobs
+
+Siga o guia de contribuição para contribuir com o projeto.
+
+1- Faça um fork do projeto.
+
+2- Crie sua branch (git checkout -b feature/nova-feature).
+
+3 - Commit suas mudanças (git commit -m 'feat: adiciona nova feature').
+
+4 - Faça push da branch (git push origin feature/nova-feature).
+
+5 - Abra um Pull Request.
+
+---
+
+## Licença
+
+O projeto está licenciado sob a licenca MIT. Leia o arquivo `LICENSE` para mais detalhes.
