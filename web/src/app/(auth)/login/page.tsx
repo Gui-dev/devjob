@@ -46,7 +46,12 @@ const LoginPage = () => {
   }
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-svh px-4">
+    <div className="relative flex flex-col items-center justify-center min-h-svh px-4">
+      <div className="absolute bottom-[-20px] left-[-30px] size-20 bg-primary rounded-full z-[-1]" />
+      <div className="absolute top-[-20px] right-[-13px] size-40 bg-primary rounded-full z-[-1]" />
+      <div className="absolute top-[400px] right-[315px] size-30 bg-primary rounded-full z-[-1]" />
+      <div className="absolute top-40 left-30 size-44 bg-primary rounded-full z-[-1]" />
+
       <Card className="w-full max-w-md shadow-lg border border-zinc-800 bg-zinc-950">
         <CardHeader className="text-center space-y-2">
           <CardTitle className="text-2xl font-bold text-primary">
